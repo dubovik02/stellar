@@ -1,11 +1,34 @@
+import BaseApi from '@/api/base-api';
+import properties from '@/utils/properties';
+import { useEffect, useState } from 'react';
+
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
-import { ingredients } from '@utils/ingredients';
+
+import type { TIngredient } from '@/utils/types';
 
 import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
+  const [ingredients, setIngredients] = useState([] as TIngredient[]);
+
+  useEffect(() => {
+    new BaseApi()
+      .getIngridients(properties.api.ingredientsUrl)
+      .then((res) => {
+        if (typeof res === 'object' && res && 'data' in res) {
+          const arrIng = res.data as TIngredient[];
+          setIngredients(arrIng);
+        } else {
+          setIngredients([]);
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  }, []);
+
   return (
     <div className={styles.app}>
       <AppHeader />

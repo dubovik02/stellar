@@ -1,0 +1,20 @@
+.detail__props_container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.detail__prop {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.detail__image {
+  width: 480px;
+  height: 240px;
+}
+
+.detail__name {
+  text-align: center;
+}

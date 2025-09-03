@@ -12,3 +12,10 @@ export type TIngredient = {
   image_mobile: string;
   __v: number;
 };
+
+export type TModalProps = {
+  caption?: string;
+  onCloseEvent?: () => void;
+  children?: React.ReactNode;
+  data?: object;
+};

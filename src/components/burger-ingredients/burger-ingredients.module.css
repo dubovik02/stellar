@@ -13,3 +13,17 @@
   text-align: center;
   list-style-type: none;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardsContainer {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 2fr);
+  height: 55vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}

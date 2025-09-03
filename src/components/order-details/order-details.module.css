@@ -1,0 +1,19 @@
+.order__number {
+  margin-bottom: 32px;
+}
+
+.order__progress {
+  margin-bottom: 8px;
+}
+
+.order__check_ico {
+  width: 60px;
+  height: 60px;
+  padding: 30px;
+}
+
+.order__check_container {
+  margin: 60px 0;
+  background: linear-gradient(63.18deg, #801ab3, #4c4cff);
+  border-radius: 50%;
+}
