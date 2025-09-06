@@ -5,6 +5,7 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 
+import { Modal } from '../modal/modal';
 import { OrderDetails } from '../order-details/order-details';
 
 import type { TIngredient } from '@utils/types';
@@ -28,7 +29,15 @@ export const BurgerConstructor = ({
     setModalVisible(false);
   }
 
-  const modal = <OrderDetails onCloseEvent={handleOrderDetailsClose} />;
+  const modal = <Modal onCloseEvent={handleOrderDetailsClose}>{<OrderDetails />}</Modal>;
+
+  const bun = ingredients.find((item) => {
+    return item.type === 'bun';
+  });
+
+  const mainAndSauce = ingredients.filter((item) => {
+    return item.type != 'bun';
+  });
 
   return (
     <section className={styles.burger__constructor}>
@@ -37,13 +46,13 @@ export const BurgerConstructor = ({
           <ConstructorElement
             type="top"
             isLocked={true}
-            text="Краторная булка N-200i (верх)"
-            price={200}
-            thumbnail="https://code.s3.yandex.net/react/code/cheese.png"
+            text={(bun?.name ?? '') + ' (верх)'}
+            price={(bun?.price ?? '') as number}
+            thumbnail={bun?.image ?? 'null'}
           />
         </div>
         <div className={styles.cards__container_filling}>
-          {ingredients.map((item) => {
+          {mainAndSauce.map((item) => {
             return (
               <ConstructorElement
                 key={item._id}
@@ -58,9 +67,9 @@ export const BurgerConstructor = ({
           <ConstructorElement
             type="bottom"
             isLocked={true}
-            text="Краторная булка N-200i (низ)"
-            price={200}
-            thumbnail="https://code.s3.yandex.net/react/code/cheese.png"
+            text={(bun?.name ?? '') + ' (низ)'}
+            price={(bun?.price ?? '') as number}
+            thumbnail={bun?.image ?? 'null'}
           />
         </div>
       </div>

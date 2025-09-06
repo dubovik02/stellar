@@ -2,6 +2,7 @@ import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-componen
 import { useState, type SyntheticEvent } from 'react';
 
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
+import { Modal } from '../modal/modal';
 
 import type { TIngredient } from '@/utils/types';
 
@@ -18,7 +19,11 @@ export const BurgerComponent = (props: TIngredient): React.JSX.Element => {
     setModalPropVisible(false);
   }
 
-  const modal = <IngredientDetails data={props} onCloseEvent={handleIngredientClose} />;
+  const modal = (
+    <Modal caption="Детали ингридиента" onCloseEvent={handleIngredientClose}>
+      <IngredientDetails {...props}></IngredientDetails>
+    </Modal>
+  );
 
   return (
     <>
@@ -30,7 +35,7 @@ export const BurgerComponent = (props: TIngredient): React.JSX.Element => {
         }}
       >
         <Counter count={0} size="default" extraClass="m-1" />
-        <img src={props.image} alt="picture"></img>
+        <img src={props.image} alt={props.name}></img>
         <div className={`${styles.priceContainer} m-1`}>
           <span className={styles.price}>{props.price}</span>
           <CurrencyIcon type="primary" />
