@@ -1,0 +1,25 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.priceContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.price {
+  margin: 0;
+  padding-right: 10px;
+}
+
+.name {
+  margin-top: 0;
+  margin-bottom: auto;
+  text-align: center;
+}
