@@ -1,5 +1,6 @@
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
+import { connect } from 'react-redux';
 
 import { BurgerComponent } from '../burger-component/burger-component';
 
@@ -87,3 +88,11 @@ export const BurgerIngredients = ({
     </section>
   );
 };
+
+const mapStateToProps = (store: Record<string, unknown>): unknown => {
+  return {
+    ingredients: store.ingredients,
+  };
+};
+
+export default connect(mapStateToProps)(BurgerIngredients);
