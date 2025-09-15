@@ -1,8 +1,10 @@
+import { useSelector } from 'react-redux';
+
 import type { TIngredient } from '@/utils/types';
 
 import styles from './ingredient-details.module.css';
 
-export const IngredientDetails = (props: TIngredient): React.JSX.Element => {
+export const IngredientDetails = (): React.JSX.Element => {
   const createPropElem = (name: string, val: number): React.JSX.Element => {
     return (
       <div className={styles.detail__prop}>
@@ -12,17 +14,25 @@ export const IngredientDetails = (props: TIngredient): React.JSX.Element => {
     );
   };
 
+  const { component } = useSelector((store: Record<string, unknown>) => ({
+    component: (store.component as Record<string, unknown>).component as TIngredient,
+  }));
+
   return (
     <>
-      <img className={styles.detail__image} src={props.image} alt={props.name}></img>
+      <img
+        className={styles.detail__image}
+        src={component.image}
+        alt={component.name}
+      ></img>
       <p className={`${styles.detail__name} "text text_type_main-large pt-4 pb-8"`}>
-        {props.name}
+        {component.name}
       </p>
       <div className={styles.detail__props_container as string}>
-        {createPropElem('Калории,ккал', props.calories)}
-        {createPropElem('Белки,г', props.proteins)}
-        {createPropElem('Жиры,г', props.fat)}
-        {createPropElem('Углеводы,г', props.carbohydrates)}
+        {createPropElem('Калории,ккал', component.calories)}
+        {createPropElem('Белки,г', component.proteins)}
+        {createPropElem('Жиры,г', component.fat)}
+        {createPropElem('Углеводы,г', component.carbohydrates)}
       </div>
     </>
   );
