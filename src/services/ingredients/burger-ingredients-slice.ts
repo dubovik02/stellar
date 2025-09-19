@@ -1,3 +1,4 @@
+import { checkResponse } from '@/utils/api';
 import properties from '@/utils/properties';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
@@ -16,8 +17,9 @@ const initialState: TInintialIngredientsState = {
 export const loadIngredients = createAsyncThunk(
   'ingredients/loadIngredients',
   async () => {
-    const res: Response = await fetch(properties.api.ingredientsUrl);
-    const data = (await res.json()) as object;
+    const data = (await fetch(
+      properties.api.baseUrl + properties.api.ingredientsUrl
+    ).then(checkResponse)) as object;
     return data;
   }
 );

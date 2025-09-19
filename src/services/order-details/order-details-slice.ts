@@ -1,3 +1,4 @@
+import { checkResponse } from '@/utils/api';
 import properties from '@/utils/properties';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
@@ -18,12 +19,11 @@ const initialState: TOrderState = {
 export const loadOrder = createAsyncThunk(
   'order/loadOrder',
   async (componentIdObj: Record<string, unknown>) => {
-    const res: Response = await fetch(properties.api.orderUrl, {
+    const data = await fetch(properties.api.baseUrl + properties.api.orderUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(componentIdObj),
-    });
-    const data = (await res.json()) as object;
+    }).then(checkResponse);
     return data;
   }
 );

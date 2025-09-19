@@ -1,4 +1,5 @@
 import { loadIngredients } from '@/services/ingredients/burger-ingredients-slice';
+import { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch } from 'react-redux';
@@ -13,7 +14,9 @@ import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
   const dispatch = useDispatch();
-  dispatch(loadIngredients() as unknown as UnknownAction);
+  useEffect(() => {
+    dispatch(loadIngredients() as unknown as UnknownAction);
+  }, []);
 
   return (
     <>
