@@ -1,32 +1,21 @@
-import BaseApi from '@/api/base-api';
-import properties from '@/utils/properties';
-import { useEffect, useState } from 'react';
+import { loadIngredients } from '@/services/ingredients/burger-ingredients-slice';
+import { useEffect } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useDispatch } from 'react-redux';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
-import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
+import BurgerIngredients from '@components/burger-ingredients/burger-ingredients';
 
-import type { TIngredient } from '@/utils/types';
+import type { UnknownAction } from '@reduxjs/toolkit';
 
 import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
-  const [ingredients, setIngredients] = useState([] as TIngredient[]);
-
+  const dispatch = useDispatch();
   useEffect(() => {
-    new BaseApi()
-      .getIngridients(properties.api.ingredientsUrl)
-      .then((res) => {
-        if (typeof res === 'object' && res && 'data' in res) {
-          const arrIng = res.data as TIngredient[];
-          setIngredients(arrIng);
-        } else {
-          setIngredients([]);
-        }
-      })
-      .catch((err) => {
-        alert(err);
-      });
+    dispatch(loadIngredients() as unknown as UnknownAction);
   }, []);
 
   return (
@@ -37,11 +26,12 @@ export const App = (): React.JSX.Element => {
           Соберите бургер
         </h1>
         <main className={`${styles.main} pl-5 pr-5`}>
-          <BurgerIngredients ingredients={ingredients} />
-          <BurgerConstructor ingredients={ingredients} />
+          <DndProvider backend={HTML5Backend}>
+            <BurgerIngredients />
+            <BurgerConstructor />
+          </DndProvider>
         </main>
       </div>
-      <div id="modals"></div>
     </>
   );
 };

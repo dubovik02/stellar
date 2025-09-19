@@ -1,4 +1,5 @@
 export type TIngredient = {
+  itemId?: string;
   _id: string;
   name: string;
   type: string;
@@ -18,4 +19,12 @@ export type TModalProps = {
   onCloseEvent?: () => void;
   children?: React.ReactNode;
   data?: object;
+};
+
+export type TOrder = {
+  name: string;
+  order: {
+    number: number;
+  };
+  success: boolean;
 };
