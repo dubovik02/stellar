@@ -1,0 +1,15 @@
+.rootContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.boardContainer {
+  display: flex;
+}
+
+.title {
+  width: 100%;
+  max-width: 1260px;
+  margin-right: auto;
+  margin-left: auto;
+}

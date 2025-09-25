@@ -1,10 +1,8 @@
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { BurgerComponent } from '../burger-component/burger-component';
-import { IngredientDetails } from '../ingredient-details/ingredient-details';
-import { Modal } from '../modal/modal';
 import { Waiter } from '../waiter/waiter';
 
 import type { TIngredient } from '@utils/types';
@@ -74,26 +72,10 @@ const BurgerIngredients = (): React.JSX.Element => {
     setActiveTabIndex(tabNumber);
   }
 
-  const { ingredients, isLoading, isShowComponent } = useSelector(
-    (store: Record<string, unknown>) => ({
-      ingredients: (store.ingredients as Record<string, unknown>).data as TIngredient[],
-      isLoading: (store.ingredients as Record<string, unknown>).isLoading as boolean,
-      isShowComponent: (store.component as Record<string, unknown>).isShow as boolean,
-    })
-  );
-
-  const dispatch = useDispatch();
-
-  const modalComponent = (
-    <Modal
-      caption="Детали ингридиента"
-      onCloseEvent={() => {
-        dispatch({ type: 'component/hideComponent' });
-      }}
-    >
-      <IngredientDetails></IngredientDetails>
-    </Modal>
-  );
+  const { ingredients, isLoading } = useSelector((store: Record<string, unknown>) => ({
+    ingredients: (store.ingredients as Record<string, unknown>).data as TIngredient[],
+    isLoading: (store.ingredients as Record<string, unknown>).isLoading as boolean,
+  }));
 
   const waiter = <Waiter />;
 
@@ -146,7 +128,6 @@ const BurgerIngredients = (): React.JSX.Element => {
         {createGroupElement(mainArr, 'Начинки', MAIN_HEADER)}
         {createGroupElement(sauceArr, 'Соусы', SAUCE_HEADER)}
         {isLoading && waiter}
-        {isShowComponent && modalComponent}
       </section>
     </section>
   );

@@ -1,35 +1,61 @@
+import { NotFoundErorPage } from '@/pages/error-page/error-page';
+import { Home } from '@/pages/home/home';
 import { loadIngredients } from '@/services/ingredients/burger-ingredients-slice';
+import { RoutePath } from '@/utils/route-config';
 import { useEffect } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch } from 'react-redux';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
-import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
-import BurgerIngredients from '@components/burger-ingredients/burger-ingredients';
+
+import { IngredientDetails } from '../ingredient-details/ingredient-details';
+import { Modal } from '../modal/modal';
 
 import type { UnknownAction } from '@reduxjs/toolkit';
 
 import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const background =
+    (location.state as Record<string, unknown>) &&
+    ((location.state as Record<string, unknown>)?.background as string);
+
+  const handleModalClose = (): void => {
+    void navigate(-1);
+  };
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(loadIngredients() as unknown as UnknownAction);
   }, []);
 
+  const windowModal = <IngredientDetails />;
+
+  const directModal = (
+    <Modal caption="Детали ингридиента" onCloseEvent={handleModalClose}>
+      <IngredientDetails />
+    </Modal>
+  );
+
   return (
     <>
       <div className={styles.app}>
         <AppHeader />
-        <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-          Соберите бургер
-        </h1>
         <main className={`${styles.main} pl-5 pr-5`}>
-          <DndProvider backend={HTML5Backend}>
-            <BurgerIngredients />
-            <BurgerConstructor />
-          </DndProvider>
+          <Routes location={background || location}>
+            <Route path={RoutePath.home} element={<Home />} />
+            <Route path={RoutePath.main} element={<Home />} />
+            <Route path={RoutePath.ingredients} element={windowModal} />
+            <Route path={RoutePath.not_found} element={<NotFoundErorPage />} />
+          </Routes>
+
+          {background && (
+            <Routes>
+              <Route path="/ingredients/:ingredientId" element={directModal} />
+            </Routes>
+          )}
         </main>
       </div>
     </>

@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import type { TIngredient } from '@/utils/types';
 
@@ -14,26 +15,45 @@ export const IngredientDetails = (): React.JSX.Element => {
     );
   };
 
-  const { component } = useSelector((store: Record<string, unknown>) => ({
-    component: (store.component as Record<string, unknown>).component as TIngredient,
+  const urlId = useLocation();
+
+  const { ingredients } = useSelector((store: Record<string, unknown>) => ({
+    ingredients: (store.ingredients as Record<string, unknown>).data as TIngredient[],
   }));
+
+  const component = ingredients.find((item) => {
+    return item._id === urlId.pathname.split('/')[2];
+  });
 
   return (
     <>
-      <img
-        className={styles.detail__image}
-        src={component.image}
-        alt={component.name}
-      ></img>
-      <p className={`${styles.detail__name} "text text_type_main-large pt-4 pb-8"`}>
-        {component.name}
-      </p>
-      <div className={styles.detail__props_container as string}>
-        {createPropElem('Калории,ккал', component.calories)}
-        {createPropElem('Белки,г', component.proteins)}
-        {createPropElem('Жиры,г', component.fat)}
-        {createPropElem('Углеводы,г', component.carbohydrates)}
-      </div>
+      {component && (
+        <>
+          <div className={styles.rootContainer}>
+            <img
+              className={styles.detail__image}
+              src={component.image}
+              alt={component.name}
+            ></img>
+            <p
+              className={`${styles.detail__name} "text text_type_main-large pt-4 pb-8"`}
+            >
+              {component.name}
+            </p>
+            <div className={styles.detail__props_container as string}>
+              {createPropElem('Калории,ккал', component.calories)}
+              {createPropElem('Белки,г', component.proteins)}
+              {createPropElem('Жиры,г', component.fat)}
+              {createPropElem('Углеводы,г', component.carbohydrates)}
+            </div>
+          </div>
+        </>
+      )}
+      {!component && (
+        <p className={`${styles.detail__name} "text text_type_main-large pt-4 pb-8"`}>
+          Описание отсутствует...
+        </p>
+      )}
     </>
   );
 };
