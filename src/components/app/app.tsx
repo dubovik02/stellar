@@ -1,6 +1,12 @@
 import { NotFoundErorPage } from '@/pages/error-page/error-page';
+import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
 import { Home } from '@/pages/home/home';
+import { Login } from '@/pages/login/login';
+import { Profile } from '@/pages/profile/profile';
+import { Register } from '@/pages/register/register';
+import { ResetPassword } from '@/pages/reset-password/reset-password';
 import { loadIngredients } from '@/services/ingredients/burger-ingredients-slice';
+import { checkUserAuth } from '@/services/user/user-slice';
 import { RoutePath } from '@/utils/route-config';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -10,6 +16,7 @@ import { AppHeader } from '@components/app-header/app-header';
 
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
+import { Protected } from '../protected-route/protected-route';
 
 import type { UnknownAction } from '@reduxjs/toolkit';
 
@@ -39,6 +46,10 @@ export const App = (): React.JSX.Element => {
     </Modal>
   );
 
+  useEffect(() => {
+    dispatch(checkUserAuth() as unknown as UnknownAction);
+  }, []);
+
   return (
     <>
       <div className={styles.app}>
@@ -47,6 +58,20 @@ export const App = (): React.JSX.Element => {
           <Routes location={background || location}>
             <Route path={RoutePath.home} element={<Home />} />
             <Route path={RoutePath.main} element={<Home />} />
+            <Route path={RoutePath.register} element={<Register />} />
+            <Route path={RoutePath.login} element={<Login />} />
+            <Route
+              path={RoutePath.forgot_password}
+              element={<Protected element={<ForgotPassword />} onlyUnAuth />}
+            />
+            <Route
+              path={RoutePath.reset_password}
+              element={<Protected element={<ResetPassword />} onlyUnAuth />}
+            />
+            <Route
+              path={RoutePath.profile}
+              element={<Protected element={<Profile />} onlyUnAuth />}
+            />
             <Route path={RoutePath.ingredients} element={windowModal} />
             <Route path={RoutePath.not_found} element={<NotFoundErorPage />} />
           </Routes>
