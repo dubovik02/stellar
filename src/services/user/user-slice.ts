@@ -1,4 +1,10 @@
-import { getUserInfo, isTokenExists } from '@/utils/api';
+import {
+  getUserInfo,
+  isTokenExists,
+  userLogin,
+  userLogout,
+  userRegister,
+} from '@/utils/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import type { TUser } from '@/utils/types';
@@ -6,21 +12,33 @@ import type { TUser } from '@/utils/types';
 type TUserInitialState = {
   user: TUser | null;
   isAuthChecked: boolean;
+  isLoading: boolean;
+  error: string;
 };
 
 const initialState: TUserInitialState = {
   user: null,
   isAuthChecked: false,
+  isLoading: false,
+  error: '',
 };
 
-// export const login = createAsyncThunk('user/login', async () => {
-//   const res = await userLogin();
-//   return res.user;
-// });
+export const newUserRegister = createAsyncThunk(
+  'user/register',
+  async (newUser: TUser) => {
+    const res = await userRegister(newUser);
+    return res;
+  }
+);
 
-// export const logout = createAsyncThunk('user/logout', async () => {
-//   await api.logout();
-// });
+export const login = createAsyncThunk('user/login', async (user: TUser) => {
+  const res = await userLogin(user);
+  return res;
+});
+
+export const logout = createAsyncThunk('user/logout', async () => {
+  await userLogout();
+});
 
 export const checkUserAuth = createAsyncThunk(
   'user/checkUserAuth',
@@ -45,21 +63,75 @@ export const userSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload as TUser;
     },
+    setIsLoading: (state, action) => {
+      state.isLoading = action.payload as boolean;
+    },
+    setErrorText: (state, action) => {
+      state.error = action.payload as string;
+    },
   },
   selectors: {
     selectUser: (state) => state.user,
     selectIsAuthChecked: (state) => state.isAuthChecked,
   },
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(login.fulfilled, (state, action) => {
-  //       state.user = action.payload;
-  //       state.isAuthChecked = true;
-  //     })
-  //     .addCase(logout.fulfilled, (state) => {
-  //       state.user = null;
-  //     });
-  // },
+  extraReducers: (builder) => {
+    builder
+      //checkAuth
+      .addCase(checkUserAuth.rejected, (state) => {
+        state.isAuthChecked = true;
+      })
+      //register
+      .addCase(newUserRegister.pending, (state) => {
+        state.error = '';
+        state.isLoading = true;
+      })
+      .addCase(newUserRegister.fulfilled, (state, action) => {
+        state.user = (action.payload as Record<string, unknown>).user as TUser;
+        state.isLoading = false;
+        state.isAuthChecked = true;
+        localStorage.setItem(
+          'accessToken',
+          (action.payload as Record<string, unknown>).accessToken as string
+        );
+        localStorage.setItem(
+          'refreshToken',
+          (action.payload as Record<string, unknown>).refreshToken as string
+        );
+      })
+      .addCase(newUserRegister.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message ?? 'Неизвестная ошибка:(';
+      })
+      //login
+      .addCase(login.pending, (state) => {
+        state.error = '';
+        state.isLoading = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.user = (action.payload as Record<string, unknown>).user as TUser;
+        state.isLoading = false;
+        state.isAuthChecked = true;
+        localStorage.setItem(
+          'accessToken',
+          (action.payload as Record<string, unknown>).accessToken as string
+        );
+        localStorage.setItem(
+          'refreshToken',
+          (action.payload as Record<string, unknown>).refreshToken as string
+        );
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message ?? 'Неизвестная ошибка:(';
+      })
+      //logout
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.error = '';
+        state.isLoading = false;
+        state.isAuthChecked = false;
+      });
+  },
 });
 
 export const { setIsAuthChecked, setUser } = userSlice.actions;

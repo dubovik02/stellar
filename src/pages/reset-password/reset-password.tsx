@@ -13,32 +13,34 @@ export const ResetPassword = (): React.JSX.Element => {
 
   return (
     <div className={styles.mainContainer}>
-      <h2 className="text text_type_main-medium">Восстановление пароля</h2>
-      <PasswordInput
-        onChange={function (e: ChangeEvent<HTMLInputElement>): void {
-          e.preventDefault();
-          setPassword(e.target.value);
-        }}
-        placeholder={'Введите новый пароль'}
-        value={password}
-        name={'password'}
-        extraClass="mb-2"
-      />
-      <Input
-        type={'text'}
-        placeholder={'Введите код из письма'}
-        name={'name'}
-        size={'default'}
-        extraClass="ml-1"
-        value={code}
-        onChange={function (e: ChangeEvent<HTMLInputElement>): void {
-          e.preventDefault();
-          setCode(e.target.value);
-        }}
-      />
-      <Button htmlType="button" type="primary" size="large">
-        Сохранить
-      </Button>
+      <form className={styles.form}>
+        <h2 className="text text_type_main-medium">Восстановление пароля</h2>
+        <PasswordInput
+          onChange={function (e: ChangeEvent<HTMLInputElement>): void {
+            e.preventDefault();
+            setPassword(e.target.value);
+          }}
+          placeholder={'Введите новый пароль'}
+          value={password}
+          name={'password'}
+          extraClass="mb-2"
+        />
+        <Input
+          type={'text'}
+          placeholder={'Введите код из письма'}
+          name={'name'}
+          size={'default'}
+          extraClass="ml-1"
+          value={code}
+          onChange={function (e: ChangeEvent<HTMLInputElement>): void {
+            e.preventDefault();
+            setCode(e.target.value);
+          }}
+        />
+        <Button htmlType="button" type="primary" size="large">
+          Сохранить
+        </Button>
+      </form>
       <div className={styles.linkContainer}>
         <div className={styles.buttonContainer}>
           <span className="text text_type_main-small">Вспомнили пароль?</span>

@@ -5,12 +5,12 @@ import { selectIsAuthChecked, selectUser } from '../../services/user/user-slice'
 import { Waiter } from '../waiter/waiter';
 
 type TProtectedProps = {
-  onlyUnAuth: boolean;
+  onlyAuth: boolean;
   element: React.JSX.Element;
 };
 
 export const Protected = ({
-  onlyUnAuth = false,
+  onlyAuth = false,
   element: component,
 }: TProtectedProps): React.JSX.Element => {
   const user = useSelector(selectUser);
@@ -27,12 +27,12 @@ export const Protected = ({
     return <Waiter />;
   }
 
-  if (onlyUnAuth && !user) {
+  if (onlyAuth && !user) {
     // for authorized, but unauthorized
     return <Navigate to="/login" state={{ from: location }} />;
   }
 
-  if (onlyUnAuth && user) {
+  if (!onlyAuth && user) {
     // for unauthorized, but authorized
     const { from } = (location.state ?? { from: { pathname: '/' } }) as Record<
       string,

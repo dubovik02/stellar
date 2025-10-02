@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 
-import logo from '../../stub.svg';
+import logo from '../../pictures/stub.svg';
 import { BurgerElement } from '../app/burger-element/burger-element';
 import { Modal } from '../modal/modal';
 import { OrderDetails } from '../order-details/order-details';

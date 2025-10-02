@@ -8,21 +8,23 @@ export const ForgotPassword = (): React.JSX.Element => {
 
   return (
     <div className={styles.mainContainer}>
-      <h2 className="text text_type_main-medium">Восстановление пароля</h2>
-      <EmailInput
-        placeholder={'E-mail'}
-        name={'email'}
-        value={email}
-        onChange={function (e: ChangeEvent<HTMLInputElement>): void {
-          e.preventDefault();
-          setEmail(e.target.value);
-        }}
-        isIcon={true}
-        extraClass="mb-2"
-      />
-      <Button htmlType="button" type="primary" size="large">
-        Восстановить
-      </Button>
+      <form className={styles.form}>
+        <h2 className="text text_type_main-medium">Восстановление пароля</h2>
+        <EmailInput
+          placeholder={'E-mail'}
+          name={'email'}
+          value={email}
+          onChange={function (e: ChangeEvent<HTMLInputElement>): void {
+            e.preventDefault();
+            setEmail(e.target.value);
+          }}
+          isIcon={true}
+          extraClass="mb-2"
+        />
+        <Button htmlType="button" type="primary" size="large">
+          Восстановить
+        </Button>
+      </form>
       <div className={styles.linkContainer}>
         <div className={styles.buttonContainer}>
           <span className="text text_type_main-small">Вспомнили пароль?</span>

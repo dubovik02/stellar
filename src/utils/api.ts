@@ -1,11 +1,15 @@
 import properties from './properties';
 
+import type { TUser } from './types';
+
 export function checkResponse(
   res: Response
 ): Promise<unknown> | Record<string, unknown> {
   if (typeof res === 'object' && res !== null && 'ok' in res) {
     if (!res.ok) {
-      return Promise.reject(new Error('Failed to fetch data.'));
+      return res
+        .json()
+        .then((res: Record<string, string>) => Promise.reject(new Error(res.message)));
     } else {
       return res.json();
     }
@@ -48,9 +52,7 @@ export function passwordResetReset(
 }
 
 export function userRegister(
-  email: string,
-  password: string,
-  name: string
+  newUser: TUser
 ): Promise<unknown> | Record<string, unknown> {
   return fetch(properties.api.baseUrl + properties.api.registerUrl, {
     method: 'POST',
@@ -59,18 +61,11 @@ export function userRegister(
       'Content-Type': 'application/json',
     },
 
-    body: JSON.stringify({
-      password: password,
-      email: email,
-      name: name,
-    }),
+    body: JSON.stringify(newUser),
   }).then(checkResponse);
 }
 
-export function userLogin(
-  email: string,
-  password: string
-): Promise<unknown> | Record<string, unknown> {
+export function userLogin(user: TUser): Promise<unknown> | Record<string, unknown> {
   return fetch(properties.api.baseUrl + properties.api.loginUrl, {
     method: 'POST',
 
@@ -79,8 +74,8 @@ export function userLogin(
     },
 
     body: JSON.stringify({
-      password: password,
-      email: email,
+      password: user.password,
+      email: user.email,
     }),
   }).then(checkResponse);
 }

@@ -60,17 +60,14 @@ export const App = (): React.JSX.Element => {
             <Route path={RoutePath.main} element={<Home />} />
             <Route path={RoutePath.register} element={<Register />} />
             <Route path={RoutePath.login} element={<Login />} />
-            <Route
-              path={RoutePath.forgot_password}
-              element={<Protected element={<ForgotPassword />} onlyUnAuth />}
-            />
+            <Route path={RoutePath.forgot_password} element={<ForgotPassword />} />
             <Route
               path={RoutePath.reset_password}
-              element={<Protected element={<ResetPassword />} onlyUnAuth />}
+              element={<Protected element={<ResetPassword />} onlyAuth />}
             />
             <Route
               path={RoutePath.profile}
-              element={<Protected element={<Profile />} onlyUnAuth />}
+              element={<Protected element={<Profile />} onlyAuth />}
             />
             <Route path={RoutePath.ingredients} element={windowModal} />
             <Route path={RoutePath.not_found} element={<NotFoundErorPage />} />
