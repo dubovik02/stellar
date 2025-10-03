@@ -1,29 +1,39 @@
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
-import { useState, type SyntheticEvent } from 'react';
-
-import { IngredientDetails } from '../ingredient-details/ingredient-details';
-import { Modal } from '../modal/modal';
+import { useDrag } from 'react-dnd';
+import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 import type { TIngredient } from '@/utils/types';
+import type { Ref, SyntheticEvent } from 'react';
 
 import styles from './burger-component.module.css';
 
 export const BurgerComponent = (props: TIngredient): React.JSX.Element => {
-  const [modalPropVisible, setModalPropVisible] = useState(false);
+  const dispatch = useDispatch();
 
-  function handleIngredientClick(): void {
-    setModalPropVisible(true);
+  const itemId = uuidv4();
+  const [, dragRef] = useDrag({
+    type: 'ingredient',
+    item: { itemId, ...props },
+    collect: (monitor) => ({
+      isDrag: monitor.isDragging(),
+    }),
+  });
+
+  const { bun, mainAndSauce } = useSelector((store: Record<string, unknown>) => ({
+    bun: (store.constructorBuilder as Record<string, unknown>).bun as TIngredient,
+    mainAndSauce: (store.constructorBuilder as Record<string, unknown>)
+      .mainAndSauce as TIngredient[],
+  }));
+
+  let currentIngredients: TIngredient[] = [];
+  if (bun) {
+    currentIngredients.push(bun);
+    currentIngredients.push(bun);
   }
-
-  function handleIngredientClose(): void {
-    setModalPropVisible(false);
-  }
-
-  const modal = (
-    <Modal caption="Детали ингридиента" onCloseEvent={handleIngredientClose}>
-      <IngredientDetails {...props}></IngredientDetails>
-    </Modal>
-  );
+  currentIngredients = currentIngredients.concat(mainAndSauce);
+  const countOfUse = currentIngredients.filter((item) => item._id === props._id).length;
+  const counter = <Counter count={countOfUse} size="default" extraClass="m-1" />;
 
   return (
     <>
@@ -31,10 +41,11 @@ export const BurgerComponent = (props: TIngredient): React.JSX.Element => {
         className={styles.card}
         onClick={(event: SyntheticEvent) => {
           event.stopPropagation();
-          handleIngredientClick();
+          dispatch({ type: 'component/showComponent', payload: props });
         }}
+        ref={dragRef as unknown as Ref<HTMLDivElement>}
       >
-        <Counter count={0} size="default" extraClass="m-1" />
+        {countOfUse > 0 && counter}
         <img src={props.image} alt={props.name}></img>
         <div className={`${styles.priceContainer} m-1`}>
           <span className={styles.price}>{props.price}</span>
@@ -42,7 +53,6 @@ export const BurgerComponent = (props: TIngredient): React.JSX.Element => {
         </div>
         <span className={`${styles.name}`}>{props.name}</span>
       </div>
-      {modalPropVisible && modal}
     </>
   );
 };

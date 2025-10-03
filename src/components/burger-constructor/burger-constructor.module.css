@@ -19,6 +19,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-width: 90%;
 }
 
 .cards__container_filling {
