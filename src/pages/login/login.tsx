@@ -87,9 +87,10 @@ export const Login = (): React.JSX.Element => {
             htmlType="button"
             type="secondary"
             size="medium"
-            onClick={(): void =>
-              void (async (): Promise<void> => await navigate(RoutePath.register))
-            }
+            // onClick={(): void =>
+            //   void (async (): Promise<void> => await navigate(RoutePath.register))
+            // }
+            onClick={() => void navigate(RoutePath.register)}
           >
             Зарегистрироваться
           </Button>
@@ -101,9 +102,10 @@ export const Login = (): React.JSX.Element => {
             htmlType="button"
             type="secondary"
             size="medium"
-            onClick={(): void =>
-              void (async (): Promise<void> => await navigate(RoutePath.forgot_password))
-            }
+            // onClick={(): void =>
+            //   void (async (): Promise<void> => await navigate(RoutePath.forgot_password))
+            // }
+            onClick={() => void navigate(RoutePath.forgot_password)}
           >
             Восстановить пароль
           </Button>

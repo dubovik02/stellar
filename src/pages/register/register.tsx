@@ -110,9 +110,7 @@ export const Register = (): React.JSX.Element => {
             htmlType="button"
             type="secondary"
             size="medium"
-            onClick={(): void =>
-              void (async (): Promise<void> => await navigate(RoutePath.login))
-            }
+            onClick={() => void navigate(RoutePath.login)}
           >
             Войти
           </Button>

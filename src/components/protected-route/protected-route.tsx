@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 
+//import { selectUser } from '../../services/user/user-slice';
 import { selectIsAuthChecked, selectUser } from '../../services/user/user-slice';
 import { Waiter } from '../waiter/waiter';
 
@@ -32,7 +33,7 @@ export const Protected = ({
     return <Navigate to="/login" state={{ from: location }} />;
   }
 
-  if (!onlyAuth && user) {
+  if (onlyAuth && user) {
     // for unauthorized, but authorized
     const { from } = (location.state ?? { from: { pathname: '/' } }) as Record<
       string,

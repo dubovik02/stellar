@@ -37,18 +37,21 @@ export function passwordReset(
 export function passwordResetReset(
   password: string
 ): Promise<unknown> | Record<string, unknown> {
-  return fetch(properties.api.baseUrl + properties.api.passwordReseResettUrl, {
-    method: 'POST',
+  return fetchWithRefresh(
+    properties.api.baseUrl + properties.api.passwordReseResettUrl,
+    {
+      method: 'POST',
 
-    headers: {
-      'Content-Type': 'application/json',
-    },
+      headers: {
+        'Content-Type': 'application/json',
+      },
 
-    body: JSON.stringify({
-      password: password,
-      token: localStorage.getItem('accessToken')!,
-    }),
-  }).then(checkResponse);
+      body: JSON.stringify({
+        password: password,
+        token: localStorage.getItem('accessToken')!,
+      }),
+    }
+  ).then(checkResponse);
 }
 
 export function userRegister(
@@ -109,7 +112,7 @@ export function getNewToken(): Promise<unknown> | Record<string, unknown> {
 }
 
 export function getUserInfo(): Promise<unknown> | Record<string, unknown> {
-  return fetch(properties.api.baseUrl + properties.api.userUrl, {
+  return fetchWithRefresh(properties.api.baseUrl + properties.api.userUrl, {
     method: 'GET',
 
     headers: {
@@ -124,7 +127,7 @@ export function updateUserInfo(
   password: string,
   name: string
 ): Promise<unknown> | Record<string, unknown> {
-  return fetch(properties.api.baseUrl + properties.api.userUrl, {
+  return fetchWithRefresh(properties.api.baseUrl + properties.api.userUrl, {
     method: 'PATCH',
 
     headers: {
@@ -139,5 +142,65 @@ export function updateUserInfo(
     }),
   }).then(checkResponse);
 }
+
+// const checkReponse = (res) => {
+//   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+// };
+
+// export const refreshToken = (): Promise<unknown> => {
+//   return (
+//     fetch(properties.api.baseUrl + properties.api.tokenUrl, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json;charset=utf-8',
+//       },
+//       body: JSON.stringify({
+//         token: localStorage.getItem('refreshToken'),
+//       }),
+//     })
+//       .then(checkResponse)
+//       // !! Важно для обновления токена в мидлваре, чтобы запись
+//       // была тут, а не в fetchWithRefresh
+//       .then((refreshData) => {
+//         if (!(refreshData as Record<string, unknown>).success) {
+//           //return Promise.reject(refreshData);
+//           return Promise.reject(new Error('Failed to refresh token.'));
+//         }
+//         localStorage.setItem(
+//           'refreshToken',
+//           (refreshData as Record<string, string>).refreshToken
+//         );
+//         localStorage.setItem(
+//           'accessToken',
+//           (refreshData as Record<string, string>).accessToken
+//         );
+//         return refreshData;
+//       })
+//   );
+// };
+
+export const fetchWithRefresh = async (
+  url: string,
+  options: Record<string, unknown>
+): Promise<Response> => {
+  try {
+    const res = await fetch(url, options);
+    return res;
+  } catch (err) {
+    const msg = (err as Record<string, unknown>).message as string;
+    if (msg === 'jwt expired') {
+      //const refreshData = await refreshToken(); //обновляем токен
+      const refreshData = await getNewToken(); //обновляем токен
+      (options.headers as Record<string, unknown>).authorization = (
+        refreshData as Record<string, unknown>
+      ).accessToken;
+      const res = await fetch(url, options); //повторяем запрос
+      return res;
+    } else {
+      return Promise.reject(new Error(msg));
+      //return res;
+    }
+  }
+};
 
 export const isTokenExists = (): boolean => !!localStorage.getItem('accessToken');
