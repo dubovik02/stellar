@@ -1,6 +1,7 @@
 import {
   getUserInfo,
   isTokenExists,
+  updateUserInfo,
   userLogin,
   userLogout,
   userRegister,
@@ -27,6 +28,14 @@ export const newUserRegister = createAsyncThunk(
   'user/register',
   async (newUser: TUser) => {
     const res = await userRegister(newUser);
+    return res;
+  }
+);
+
+export const updateUserProfile = createAsyncThunk(
+  'user/updateUser',
+  async (updateUser: TUser) => {
+    const res = await updateUserInfo(updateUser);
     return res;
   }
 );
@@ -125,11 +134,35 @@ export const userSlice = createSlice({
         state.error = action.error.message ?? 'Неизвестная ошибка:(';
       })
       //logout
+      .addCase(logout.pending, (state) => {
+        state.error = '';
+        state.isLoading = true;
+      })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.error = '';
         state.isLoading = false;
-        state.isAuthChecked = false;
+        //state.isAuthChecked = false;
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message ?? 'Неизвестная ошибка:(';
+      })
+      //update user
+      .addCase(updateUserProfile.pending, (state) => {
+        state.error = '';
+        state.isLoading = true;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.user = (action.payload as Record<string, unknown>).user as TUser;
+        state.isLoading = false;
+        state.isAuthChecked = true;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message ?? 'Неизвестная ошибка:(';
       });
   },
 });

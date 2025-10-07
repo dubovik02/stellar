@@ -1,15 +1,18 @@
+import { RoutePath } from '@/utils/route-config';
 import {
   Button,
   Input,
   PasswordInput,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState, type ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from '../forms-styles.module.css';
 
 export const ResetPassword = (): React.JSX.Element => {
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   return (
     <div className={styles.mainContainer}>
@@ -49,6 +52,7 @@ export const ResetPassword = (): React.JSX.Element => {
             htmlType="button"
             type="secondary"
             size="medium"
+            onClick={() => void navigate(RoutePath.login)}
           >
             Войти
           </Button>

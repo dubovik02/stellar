@@ -123,9 +123,7 @@ export function getUserInfo(): Promise<unknown> | Record<string, unknown> {
 }
 
 export function updateUserInfo(
-  email: string,
-  password: string,
-  name: string
+  newUser: TUser
 ): Promise<unknown> | Record<string, unknown> {
   return fetchWithRefresh(properties.api.baseUrl + properties.api.userUrl, {
     method: 'PATCH',
@@ -136,48 +134,12 @@ export function updateUserInfo(
     },
 
     body: JSON.stringify({
-      name: name,
-      password: password,
-      email: email,
+      name: newUser.name,
+      password: newUser.password,
+      email: newUser.email,
     }),
   }).then(checkResponse);
 }
-
-// const checkReponse = (res) => {
-//   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
-// };
-
-// export const refreshToken = (): Promise<unknown> => {
-//   return (
-//     fetch(properties.api.baseUrl + properties.api.tokenUrl, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json;charset=utf-8',
-//       },
-//       body: JSON.stringify({
-//         token: localStorage.getItem('refreshToken'),
-//       }),
-//     })
-//       .then(checkResponse)
-//       // !! Важно для обновления токена в мидлваре, чтобы запись
-//       // была тут, а не в fetchWithRefresh
-//       .then((refreshData) => {
-//         if (!(refreshData as Record<string, unknown>).success) {
-//           //return Promise.reject(refreshData);
-//           return Promise.reject(new Error('Failed to refresh token.'));
-//         }
-//         localStorage.setItem(
-//           'refreshToken',
-//           (refreshData as Record<string, string>).refreshToken
-//         );
-//         localStorage.setItem(
-//           'accessToken',
-//           (refreshData as Record<string, string>).accessToken
-//         );
-//         return refreshData;
-//       })
-//   );
-// };
 
 export const fetchWithRefresh = async (
   url: string,
@@ -189,7 +151,6 @@ export const fetchWithRefresh = async (
   } catch (err) {
     const msg = (err as Record<string, unknown>).message as string;
     if (msg === 'jwt expired') {
-      //const refreshData = await refreshToken(); //обновляем токен
       const refreshData = await getNewToken(); //обновляем токен
       (options.headers as Record<string, unknown>).authorization = (
         refreshData as Record<string, unknown>
@@ -198,7 +159,6 @@ export const fetchWithRefresh = async (
       return res;
     } else {
       return Promise.reject(new Error(msg));
-      //return res;
     }
   }
 };

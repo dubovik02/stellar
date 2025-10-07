@@ -16,6 +16,7 @@ import { AppHeader } from '@components/app-header/app-header';
 
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
+import { ProfileEditForm } from '../profile-edit-form/profile-edit-form';
 import { Protected } from '../protected-route/protected-route';
 
 import type { UnknownAction } from '@reduxjs/toolkit';
@@ -58,19 +59,29 @@ export const App = (): React.JSX.Element => {
           <Routes location={background || location}>
             <Route path={RoutePath.home} element={<Home />} />
             <Route path={RoutePath.main} element={<Home />} />
-            <Route path={RoutePath.register} element={<Register />} />
-            <Route path={RoutePath.login} element={<Login />} />
-            <Route path={RoutePath.forgot_password} element={<ForgotPassword />} />
+            <Route path={RoutePath.ingredients} element={windowModal} />
+            <Route path={RoutePath.not_found} element={<NotFoundErorPage />} />
+            <Route path={RoutePath.reset_password} element={<ResetPassword />} />
+
             <Route
-              path={RoutePath.reset_password}
-              element={<Protected element={<ResetPassword />} onlyAuth />}
-            />
+              path={RoutePath.register}
+              element={<Protected element={<Register />} onlyAuth={false} />}
+            ></Route>
+            <Route
+              path={RoutePath.login}
+              element={<Protected element={<Login />} onlyAuth={false} />}
+            ></Route>
+            <Route
+              path={RoutePath.forgot_password}
+              element={<Protected element={<ForgotPassword />} onlyAuth={false} />}
+            ></Route>
             <Route
               path={RoutePath.profile}
               element={<Protected element={<Profile />} onlyAuth />}
-            />
-            <Route path={RoutePath.ingredients} element={windowModal} />
-            <Route path={RoutePath.not_found} element={<NotFoundErorPage />} />
+            >
+              <Route path={RoutePath.profile} element={<ProfileEditForm />} />
+              <Route path={RoutePath.profile_profile} element={<ProfileEditForm />} />
+            </Route>
           </Routes>
 
           {background && (

@@ -1,70 +1,62 @@
-import { Input, PasswordInput } from '@krgaa/react-developer-burger-ui-components';
-import { useState, type ChangeEvent } from 'react';
+import { logout } from '@/services/user/user-slice';
+import { RoutePath } from '@/utils/route-config';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Outlet, useNavigate } from 'react-router-dom';
+
+import type { UnknownAction } from '@reduxjs/toolkit';
 
 import customStyles from './profile.module.css';
 
 export const Profile = (): React.JSX.Element => {
-  const [name, setName] = useState('');
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
+  const PROFILE_DESCRIPTION =
+    'В этом разделе вы можете изменить свои персональные данные';
+  const ORDERS_HISTORY = 'В этом разделе вы можете посмотреть историю заказов';
+  const EXIT = 'Выход из профиля';
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [indexDescription, setIndexDescription] = useState(PROFILE_DESCRIPTION);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <div className={customStyles.rootContainer}>
       <div className={customStyles.menuContainer}>
-        <li className={`${customStyles.menuItem} text text_type_main-medium`}>
+        <li
+          className={`${customStyles.menuItem} text text_type_main-medium ${activeIndex === 0 ? '' : 'text_color_inactive'}`}
+          onClick={() => {
+            setActiveIndex(0);
+            setIndexDescription(PROFILE_DESCRIPTION);
+            void navigate(RoutePath.profile_profile);
+          }}
+        >
           Профиль
         </li>
         <li
-          className={`${customStyles.menuItem} text text_type_main-medium text_color_inactive`}
+          className={`${customStyles.menuItem} text text_type_main-medium ${activeIndex === 1 ? '' : 'text_color_inactive'}`}
+          onClick={() => {
+            setActiveIndex(1);
+            setIndexDescription(ORDERS_HISTORY);
+          }}
         >
           История заказов
         </li>
         <li
-          className={`${customStyles.menuItem} text text_type_main-medium text_color_inactive`}
+          className={`${customStyles.menuItem} text text_type_main-medium ${activeIndex === 2 ? '' : 'text_color_inactive'}`}
+          onClick={() => {
+            setActiveIndex(2);
+            setIndexDescription(EXIT);
+            dispatch(logout() as unknown as UnknownAction);
+          }}
         >
           Выход
         </li>
         <p className="text text_type_main-default text_color_inactive">
-          В этом разделе вы можете изменить свои персональные данные
+          {indexDescription}
         </p>
       </div>
-      <div className={customStyles.fieldContainer}>
-        <Input
-          type={'text'}
-          placeholder={'Имя'}
-          name={'name'}
-          size={'default'}
-          extraClass="ml-1"
-          value={name}
-          icon={'EditIcon'}
-          onChange={function (e: ChangeEvent<HTMLInputElement>): void {
-            e.preventDefault();
-            setName(e.target.value);
-          }}
-        />
-        <Input
-          type={'text'}
-          placeholder={'Логин'}
-          name={'login'}
-          size={'default'}
-          extraClass="ml-1"
-          value={login}
-          icon={'EditIcon'}
-          onChange={function (e: ChangeEvent<HTMLInputElement>): void {
-            e.preventDefault();
-            setLogin(e.target.value);
-          }}
-        />
-        <PasswordInput
-          onChange={function (e: ChangeEvent<HTMLInputElement>): void {
-            e.preventDefault();
-            setPassword(e.target.value);
-          }}
-          value={password}
-          name={'password'}
-          extraClass="mb-2"
-        />
-      </div>
+      <Outlet />
     </div>
   );
 };
