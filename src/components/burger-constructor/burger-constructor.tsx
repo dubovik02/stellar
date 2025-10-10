@@ -1,4 +1,6 @@
 import { loadOrder } from '@/services/order-details/order-details-slice';
+import { selectUser } from '@/services/user/user-slice';
+import { RoutePath } from '@/utils/route-config';
 import {
   ConstructorElement,
   Button,
@@ -7,9 +9,11 @@ import {
 import { useMemo } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import logo from '../../pictures/stub.svg';
 import { BurgerElement } from '../app/burger-element/burger-element';
+import { MessageDialog } from '../message-dialog/message-dialog';
 import { Modal } from '../modal/modal';
 import { OrderDetails } from '../order-details/order-details';
 import { Waiter } from '../waiter/waiter';
@@ -21,6 +25,8 @@ import type { Ref } from 'react';
 import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = (): React.JSX.Element => {
+  const user = useSelector(selectUser);
+  const navigate = useNavigate();
   function handleOrderClick(): void {
     if (bun === null) {
       alert('Без булки куска везде тоска! Добавьте булку - так вкуснее!');
@@ -28,6 +34,10 @@ export const BurgerConstructor = (): React.JSX.Element => {
     }
     if (mainAndSauce.length === 0) {
       alert('Только булкой сыт не будешь! Добавьте начинку и соусы!');
+      return;
+    }
+    if (!user) {
+      void navigate(RoutePath.login);
       return;
     }
     const orderData: string[] = [];
@@ -55,10 +65,26 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
   const waiter = <Waiter />;
 
-  const { isLoading, isModalShow } = useSelector((store: Record<string, unknown>) => ({
-    isModalShow: (store.order as Record<string, unknown>).isModalShow as boolean,
-    isLoading: (store.order as Record<string, unknown>).isLoading as boolean,
-  }));
+  const { isLoading, isModalShow, error } = useSelector(
+    (store: Record<string, unknown>) => ({
+      isModalShow: (store.order as Record<string, unknown>).isModalShow as boolean,
+      isLoading: (store.order as Record<string, unknown>).isLoading as boolean,
+      error: (store.order as Record<string, unknown>).error as string,
+    })
+  );
+
+  const errorModal = (
+    <Modal
+      onCloseEvent={() => {
+        dispatch({ type: 'order/hideErrorModal' });
+      }}
+    >
+      <MessageDialog
+        messageType={'error'}
+        message={`Ошибка при формировании заказ: ${error}`}
+      />
+    </Modal>
+  );
 
   const { bun, mainAndSauce } = useSelector((store: Record<string, unknown>) => ({
     bun: (store.constructorBuilder as Record<string, unknown>).bun as TIngredient,
@@ -140,6 +166,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
         </Button>
         {isModalShow && modal}
       </div>
+      {error && errorModal}
     </section>
   );
 };

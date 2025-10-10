@@ -38,6 +38,7 @@ export const Profile = (): React.JSX.Element => {
           onClick={() => {
             setActiveIndex(1);
             setIndexDescription(ORDERS_HISTORY);
+            void navigate(RoutePath.profile_orders);
           }}
         >
           История заказов

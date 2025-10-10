@@ -35,7 +35,8 @@ export function passwordReset(
 }
 
 export function passwordResetReset(
-  password: string
+  password: string,
+  code: string
 ): Promise<unknown> | Record<string, unknown> {
   return fetchWithRefresh(
     properties.api.baseUrl + properties.api.passwordReseResettUrl,
@@ -48,7 +49,7 @@ export function passwordResetReset(
 
       body: JSON.stringify({
         password: password,
-        token: localStorage.getItem('accessToken')!,
+        token: code,
       }),
     }
   ).then(checkResponse);
@@ -138,6 +139,19 @@ export function updateUserInfo(
       password: newUser.password,
       email: newUser.email,
     }),
+  }).then(checkResponse);
+}
+
+export function createOrder(
+  componentIdObj: Record<string, unknown>
+): Promise<unknown> | Record<string, unknown> {
+  return fetchWithRefresh(properties.api.baseUrl + properties.api.orderUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: localStorage.getItem('accessToken')!,
+    },
+    body: JSON.stringify(componentIdObj),
   }).then(checkResponse);
 }
 

@@ -17,6 +17,7 @@ import { AppHeader } from '@components/app-header/app-header';
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
 import { ProfileEditForm } from '../profile-edit-form/profile-edit-form';
+import { ProfileOrdersForm } from '../profile-orders-form/profile-orders-form';
 import { Protected } from '../protected-route/protected-route';
 
 import type { UnknownAction } from '@reduxjs/toolkit';
@@ -61,7 +62,16 @@ export const App = (): React.JSX.Element => {
             <Route path={RoutePath.main} element={<Home />} />
             <Route path={RoutePath.ingredients} element={windowModal} />
             <Route path={RoutePath.not_found} element={<NotFoundErorPage />} />
-            <Route path={RoutePath.reset_password} element={<ResetPassword />} />
+            <Route
+              path={RoutePath.reset_password}
+              element={
+                localStorage.getItem('canShowReset') === 'true' ? (
+                  <ResetPassword />
+                ) : (
+                  <Home />
+                )
+              }
+            />
 
             <Route
               path={RoutePath.register}
@@ -81,6 +91,7 @@ export const App = (): React.JSX.Element => {
             >
               <Route path={RoutePath.profile} element={<ProfileEditForm />} />
               <Route path={RoutePath.profile_profile} element={<ProfileEditForm />} />
+              <Route path={RoutePath.profile_orders} element={<ProfileOrdersForm />} />
             </Route>
           </Routes>
 
