@@ -1,0 +1,31 @@
+.rootContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  margin: auto 0;
+}
+
+.menuContainer {
+  display: flex;
+  flex-direction: column;
+  width: 480px;
+}
+
+.fieldContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 180px;
+  min-height: 480px;
+}
+
+.menuItem {
+  margin: 16px 0 !important;
+  list-style: none;
+  cursor: pointer;
+}
+
+.menuItem:last-of-type {
+  margin-bottom: 80px !important;
+}

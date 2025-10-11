@@ -1,15 +1,15 @@
 import { combineSlices } from '@reduxjs/toolkit';
 
-import { componentSlice } from './component/burger-component-slice';
 import { constructorSlice } from './constructor/burger-constructor-slice';
 import { ingredientsSlice } from './ingredients/burger-ingredients-slice';
 import { orderSlice } from './order-details/order-details-slice';
+import { userSlice } from './user/user-slice';
 
 const rootReducer = combineSlices(
   ingredientsSlice,
   constructorSlice,
-  componentSlice,
-  orderSlice
+  orderSlice,
+  userSlice
 );
 
 export default rootReducer;
