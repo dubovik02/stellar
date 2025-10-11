@@ -42,11 +42,21 @@ export const updateUserProfile = createAsyncThunk(
 
 export const login = createAsyncThunk('user/login', async (user: TUser) => {
   const res = await userLogin(user);
+  localStorage.setItem(
+    'accessToken',
+    (res as Record<string, unknown>).accessToken as string
+  );
+  localStorage.setItem(
+    'refreshToken',
+    (res as Record<string, unknown>).refreshToken as string
+  );
   return res;
 });
 
 export const logout = createAsyncThunk('user/logout', async () => {
   await userLogout();
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
 });
 
 export const checkUserAuth = createAsyncThunk(
@@ -120,14 +130,14 @@ export const userSlice = createSlice({
         state.user = (action.payload as Record<string, unknown>).user as TUser;
         state.isLoading = false;
         state.isAuthChecked = true;
-        localStorage.setItem(
-          'accessToken',
-          (action.payload as Record<string, unknown>).accessToken as string
-        );
-        localStorage.setItem(
-          'refreshToken',
-          (action.payload as Record<string, unknown>).refreshToken as string
-        );
+        // localStorage.setItem(
+        //   'accessToken',
+        //   (action.payload as Record<string, unknown>).accessToken as string
+        // );
+        // localStorage.setItem(
+        //   'refreshToken',
+        //   (action.payload as Record<string, unknown>).refreshToken as string
+        // );
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -142,9 +152,8 @@ export const userSlice = createSlice({
         state.user = null;
         state.error = '';
         state.isLoading = false;
-        //state.isAuthChecked = false;
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        // localStorage.removeItem('accessToken');
+        // localStorage.removeItem('refreshToken');
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;
