@@ -13,19 +13,19 @@ import { MessageDialog } from '../message-dialog/message-dialog';
 import { Modal } from '../modal/modal';
 import { Waiter } from '../waiter/waiter';
 
-import type { TUser } from '@/utils/types';
+import type { TStore } from '@/utils/types';
 import type { UnknownAction } from '@reduxjs/toolkit';
 
 import customStyles from './profile-edit-form.module.css';
 
 export const ProfileEditForm = (): React.JSX.Element => {
-  const { user, isLoading, error } = useSelector((store: Record<string, unknown>) => ({
-    user: (store.user as Record<string, unknown>).user as TUser,
-    isLoading: (store.user as Record<string, unknown>).isLoading as boolean,
-    error: (store.user as Record<string, unknown>).error as string,
+  const { user, isLoading, error } = useSelector((store: TStore) => ({
+    user: store.user.user,
+    isLoading: store.user.isLoading,
+    error: store.user.error,
   }));
-  const [name, setName] = useState(user.name ?? '');
-  const [email, setEmail] = useState(user.email);
+  const [name, setName] = useState(user!.name ?? '');
+  const [email, setEmail] = useState(user!.email);
   const [password, setPassword] = useState('');
 
   const waiter = <Waiter />;

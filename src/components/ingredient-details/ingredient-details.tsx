@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
-import type { TIngredient } from '@/utils/types';
+import type { TStore } from '@/utils/types';
 
 import styles from './ingredient-details.module.css';
 
@@ -17,8 +17,8 @@ export const IngredientDetails = (): React.JSX.Element => {
 
   const urlId = useLocation();
 
-  const { ingredients } = useSelector((store: Record<string, unknown>) => ({
-    ingredients: (store.ingredients as Record<string, unknown>).data as TIngredient[],
+  const { ingredients } = useSelector((store: TStore) => ({
+    ingredients: store.ingredients.data,
   }));
 
   const component = ingredients.find((item) => {

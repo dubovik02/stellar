@@ -12,6 +12,8 @@ import { useEffect, useState, type ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import type { TStore } from '@/utils/types';
+
 import styles from '../forms-styles.module.css';
 
 export const ResetPassword = (): React.JSX.Element => {
@@ -24,9 +26,9 @@ export const ResetPassword = (): React.JSX.Element => {
   const dispatch = useDispatch();
 
   const waiter = <Waiter />;
-  const { isLoading, error } = useSelector((store: Record<string, unknown>) => ({
-    isLoading: (store.user as Record<string, unknown>).isLoading as boolean,
-    error: (store.user as Record<string, unknown>).error as string,
+  const { isLoading, error } = useSelector((store: TStore) => ({
+    isLoading: store.user.isLoading,
+    error: store.user.error,
   }));
 
   const modal = (
@@ -61,8 +63,6 @@ export const ResetPassword = (): React.JSX.Element => {
                   payload: err.message ?? 'неизвестная ошибка',
                 });
               });
-            // alert('Пароль успешно изменен!');
-            // void navigate(RoutePath.login);
           } else {
             dispatch({
               type: 'user/setErrorText',
