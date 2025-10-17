@@ -1,14 +1,7 @@
 import { createOrder } from '@/utils/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import type { TOrder } from '@/utils/types';
-
-type TOrderState = {
-  data: TOrder | null;
-  isLoading: boolean;
-  isModalShow: boolean;
-  error?: string;
-};
+import type { TOrderData, TOrderState } from '@/utils/types';
 
 const initialState: TOrderState = {
   data: null,
@@ -19,7 +12,7 @@ const initialState: TOrderState = {
 
 export const loadOrder = createAsyncThunk(
   'order/loadOrder',
-  async (componentIdObj: Record<string, unknown>) => {
+  async (componentIdObj: TOrderData) => {
     const data = await createOrder(componentIdObj);
     return data;
   }
@@ -44,7 +37,7 @@ export const orderSlice = createSlice({
       })
       .addCase(loadOrder.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data = action.payload as TOrder;
+        state.data = action.payload;
         state.isModalShow = true;
       })
       .addCase(loadOrder.rejected, (state) => {

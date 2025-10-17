@@ -1,10 +1,16 @@
 import properties from './properties';
 
-import type { TUser } from './types';
+import type {
+  TInfoResponse,
+  TOrder,
+  TOrderData,
+  TRefreshTokenResponse,
+  TUser,
+  TUserInfoResponse,
+  TUserRegisterResponse,
+} from './types';
 
-export function checkResponse(
-  res: Response
-): Promise<unknown> | Record<string, unknown> {
+export function checkResponse<T>(res: Response): Promise<T> {
   if (typeof res === 'object' && res !== null && 'ok' in res) {
     if (!res.ok) {
       return res
@@ -18,9 +24,7 @@ export function checkResponse(
   }
 }
 
-export function passwordReset(
-  email: string
-): Promise<unknown> | Record<string, unknown> {
+export function passwordReset(email: string): Promise<TInfoResponse> {
   return fetch(properties.api.baseUrl + properties.api.passwordResetUrl, {
     method: 'POST',
 
@@ -31,13 +35,13 @@ export function passwordReset(
     body: JSON.stringify({
       email: email,
     }),
-  }).then(checkResponse);
+  }).then(checkResponse<TInfoResponse>);
 }
 
 export function passwordResetReset(
   password: string,
   code: string
-): Promise<unknown> | Record<string, unknown> {
+): Promise<TInfoResponse> {
   return fetchWithRefresh(
     properties.api.baseUrl + properties.api.passwordReseResettUrl,
     {
@@ -52,12 +56,10 @@ export function passwordResetReset(
         token: code,
       }),
     }
-  ).then(checkResponse);
+  ).then(checkResponse<TInfoResponse>);
 }
 
-export function userRegister(
-  newUser: TUser
-): Promise<unknown> | Record<string, unknown> {
+export function userRegister(newUser: TUser): Promise<TUserRegisterResponse> {
   return fetch(properties.api.baseUrl + properties.api.registerUrl, {
     method: 'POST',
 
@@ -66,10 +68,10 @@ export function userRegister(
     },
 
     body: JSON.stringify(newUser),
-  }).then(checkResponse);
+  }).then(checkResponse<TUserRegisterResponse>);
 }
 
-export function userLogin(user: TUser): Promise<unknown> | Record<string, unknown> {
+export function userLogin(user: TUser): Promise<TUserRegisterResponse> {
   return fetch(properties.api.baseUrl + properties.api.loginUrl, {
     method: 'POST',
 
@@ -81,10 +83,10 @@ export function userLogin(user: TUser): Promise<unknown> | Record<string, unknow
       password: user.password,
       email: user.email,
     }),
-  }).then(checkResponse);
+  }).then(checkResponse<TUserRegisterResponse>);
 }
 
-export function userLogout(): Promise<unknown> | Record<string, unknown> {
+export function userLogout(): Promise<TInfoResponse> {
   return fetch(properties.api.baseUrl + properties.api.logoutUrl, {
     method: 'POST',
 
@@ -95,10 +97,10 @@ export function userLogout(): Promise<unknown> | Record<string, unknown> {
     body: JSON.stringify({
       token: localStorage.getItem('refreshToken')!,
     }),
-  }).then(checkResponse);
+  }).then(checkResponse<TInfoResponse>);
 }
 
-export function getNewToken(): Promise<unknown> | Record<string, unknown> {
+export function getNewToken(): Promise<TRefreshTokenResponse> {
   return fetch(properties.api.baseUrl + properties.api.tokenUrl, {
     method: 'POST',
 
@@ -109,10 +111,10 @@ export function getNewToken(): Promise<unknown> | Record<string, unknown> {
     body: JSON.stringify({
       token: localStorage.getItem('refreshToken')!,
     }),
-  }).then(checkResponse);
+  }).then(checkResponse<TRefreshTokenResponse>);
 }
 
-export function getUserInfo(): Promise<unknown> | Record<string, unknown> {
+export function getUserInfo(): Promise<TUserInfoResponse> {
   return fetchWithRefresh(properties.api.baseUrl + properties.api.userUrl, {
     method: 'GET',
 
@@ -120,12 +122,10 @@ export function getUserInfo(): Promise<unknown> | Record<string, unknown> {
       'Content-Type': 'application/json',
       authorization: localStorage.getItem('accessToken')!,
     },
-  }).then(checkResponse);
+  }).then(checkResponse<TUserInfoResponse>);
 }
 
-export function updateUserInfo(
-  newUser: TUser
-): Promise<unknown> | Record<string, unknown> {
+export function updateUserInfo(newUser: TUser): Promise<TUserInfoResponse> {
   return fetchWithRefresh(properties.api.baseUrl + properties.api.userUrl, {
     method: 'PATCH',
 
@@ -139,12 +139,10 @@ export function updateUserInfo(
       password: newUser.password,
       email: newUser.email,
     }),
-  }).then(checkResponse);
+  }).then(checkResponse<TUserInfoResponse>);
 }
 
-export function createOrder(
-  componentIdObj: Record<string, unknown>
-): Promise<unknown> | Record<string, unknown> {
+export function createOrder(componentIdObj: TOrderData): Promise<TOrder> {
   return fetchWithRefresh(properties.api.baseUrl + properties.api.orderUrl, {
     method: 'POST',
     headers: {
@@ -152,12 +150,12 @@ export function createOrder(
       authorization: localStorage.getItem('accessToken')!,
     },
     body: JSON.stringify(componentIdObj),
-  }).then(checkResponse);
+  }).then(checkResponse<TOrder>);
 }
 
 export const fetchWithRefresh = async (
   url: string,
-  options: Record<string, unknown>
+  options: RequestInit
 ): Promise<Response> => {
   try {
     const res = await fetch(url, options);
@@ -166,11 +164,14 @@ export const fetchWithRefresh = async (
     const msg = (err as Record<string, unknown>).message as string;
     if (msg === 'jwt expired') {
       const refreshData = await getNewToken(); //обновляем токен
-      (options.headers as Record<string, unknown>).authorization = (
-        refreshData as Record<string, unknown>
-      ).accessToken;
-      const res = await fetch(url, options); //повторяем запрос
-      return res;
+      if (options.headers) {
+        (options.headers as Record<string, string>).authorization =
+          refreshData.accessToken;
+        const res = await fetch(url, options); //повторяем запрос
+        return res;
+      } else {
+        return Promise.reject(new Error(msg));
+      }
     } else {
       return Promise.reject(new Error(msg));
     }

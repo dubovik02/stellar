@@ -2,12 +2,7 @@ import { checkResponse } from '@/utils/api';
 import properties from '@/utils/properties';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import type { TIngredient } from '@/utils/types';
-
-type TInintialIngredientsState = {
-  data: TIngredient[];
-  isLoading: boolean;
-};
+import type { TInintialIngredientsState } from '@/utils/types';
 
 const initialState: TInintialIngredientsState = {
   data: [],
@@ -17,9 +12,9 @@ const initialState: TInintialIngredientsState = {
 export const loadIngredients = createAsyncThunk(
   'ingredients/loadIngredients',
   async () => {
-    const data = (await fetch(
+    const data = await fetch(
       properties.api.baseUrl + properties.api.ingredientsUrl
-    ).then(checkResponse)) as object;
+    ).then(checkResponse<TInintialIngredientsState>);
     return data;
   }
 );
@@ -35,7 +30,7 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(loadIngredients.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data = (action.payload as TInintialIngredientsState).data;
+        state.data = action.payload.data;
       })
       .addCase(loadIngredients.rejected, (state) => {
         state.isLoading = false;

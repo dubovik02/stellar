@@ -1,12 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { TIngredient } from '@/utils/types';
-
-type TConstructorState = {
-  bun: TIngredient | null;
-  mainAndSauce: TIngredient[];
-  isLoading: boolean;
-};
+import type { TConstructorState, TIngredient } from '@/utils/types';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: TConstructorState = {
   bun: null,
@@ -21,12 +16,12 @@ export const constructorSlice = createSlice({
     addBun: (state, action) => {
       state.bun = action.payload as TIngredient;
     },
-    addIngredient: (state, action) => {
-      state.mainAndSauce = [...state.mainAndSauce, action.payload as TIngredient];
+    addIngredient: (state, action: PayloadAction<TIngredient>) => {
+      state.mainAndSauce = [...state.mainAndSauce, action.payload];
     },
-    delIngredient: (state, action) => {
-      state.mainAndSauce = ([...state.mainAndSauce] as TIngredient[]).filter((item) => {
-        return item.itemId !== (action.payload as TIngredient).itemId;
+    delIngredient: (state, action: PayloadAction<TIngredient>) => {
+      state.mainAndSauce = [...state.mainAndSauce].filter((item) => {
+        return item.itemId !== action.payload.itemId;
       });
     },
     reorderIngredients: (state, action) => {
@@ -47,7 +42,7 @@ export const constructorSlice = createSlice({
         targetIndex = buf;
       }
 
-      const burgerComponents = [...state.mainAndSauce] as TIngredient[];
+      const burgerComponents = [...state.mainAndSauce];
 
       burgerComponents.splice(
         targetIndex,

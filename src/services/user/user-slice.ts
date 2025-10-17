@@ -8,14 +8,8 @@ import {
 } from '@/utils/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import type { TUser } from '@/utils/types';
-
-type TUserInitialState = {
-  user: TUser | null;
-  isAuthChecked: boolean;
-  isLoading: boolean;
-  error: string;
-};
+import type { TUser, TUserInitialState } from '@/utils/types';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: TUserInitialState = {
   user: null,
@@ -42,14 +36,8 @@ export const updateUserProfile = createAsyncThunk(
 
 export const login = createAsyncThunk('user/login', async (user: TUser) => {
   const res = await userLogin(user);
-  localStorage.setItem(
-    'accessToken',
-    (res as Record<string, unknown>).accessToken as string
-  );
-  localStorage.setItem(
-    'refreshToken',
-    (res as Record<string, unknown>).refreshToken as string
-  );
+  localStorage.setItem('accessToken', res.accessToken);
+  localStorage.setItem('refreshToken', res.refreshToken);
   return res;
 });
 
@@ -64,7 +52,7 @@ export const checkUserAuth = createAsyncThunk(
   async (_, { dispatch }) => {
     if (isTokenExists()) {
       const res = await getUserInfo();
-      dispatch(setUser((res as Record<string, unknown>).user as TUser));
+      dispatch(setUser(res.user));
       dispatch(setIsAuthChecked(true));
     } else {
       dispatch(setIsAuthChecked(true));
@@ -76,17 +64,17 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setIsAuthChecked: (state, action) => {
-      state.isAuthChecked = action.payload as boolean;
+    setIsAuthChecked: (state, action: PayloadAction<boolean>) => {
+      state.isAuthChecked = action.payload;
     },
-    setUser: (state, action) => {
-      state.user = action.payload as TUser;
+    setUser: (state, action: PayloadAction<TUser>) => {
+      state.user = action.payload;
     },
-    setIsLoading: (state, action) => {
-      state.isLoading = action.payload as boolean;
+    setIsLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
     },
-    setErrorText: (state, action) => {
-      state.error = action.payload as string;
+    setErrorText: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
     },
   },
   selectors: {
@@ -105,17 +93,11 @@ export const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(newUserRegister.fulfilled, (state, action) => {
-        state.user = (action.payload as Record<string, unknown>).user as TUser;
+        state.user = action.payload.user;
         state.isLoading = false;
         state.isAuthChecked = true;
-        localStorage.setItem(
-          'accessToken',
-          (action.payload as Record<string, unknown>).accessToken as string
-        );
-        localStorage.setItem(
-          'refreshToken',
-          (action.payload as Record<string, unknown>).refreshToken as string
-        );
+        localStorage.setItem('accessToken', action.payload.accessToken);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
       })
       .addCase(newUserRegister.rejected, (state, action) => {
         state.isLoading = false;
@@ -127,17 +109,9 @@ export const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.user = (action.payload as Record<string, unknown>).user as TUser;
+        state.user = action.payload.user;
         state.isLoading = false;
         state.isAuthChecked = true;
-        // localStorage.setItem(
-        //   'accessToken',
-        //   (action.payload as Record<string, unknown>).accessToken as string
-        // );
-        // localStorage.setItem(
-        //   'refreshToken',
-        //   (action.payload as Record<string, unknown>).refreshToken as string
-        // );
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -152,8 +126,6 @@ export const userSlice = createSlice({
         state.user = null;
         state.error = '';
         state.isLoading = false;
-        // localStorage.removeItem('accessToken');
-        // localStorage.removeItem('refreshToken');
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;
@@ -165,7 +137,7 @@ export const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updateUserProfile.fulfilled, (state, action) => {
-        state.user = (action.payload as Record<string, unknown>).user as TUser;
+        state.user = action.payload.user;
         state.isLoading = false;
         state.isAuthChecked = true;
       })

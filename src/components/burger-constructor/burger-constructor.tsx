@@ -19,7 +19,7 @@ import { OrderDetails } from '../order-details/order-details';
 import { Waiter } from '../waiter/waiter';
 
 import type { UnknownAction } from '@reduxjs/toolkit';
-import type { TIngredient } from '@utils/types';
+import type { TIngredient, TOrderData, TStore } from '@utils/types';
 import type { Ref } from 'react';
 
 import styles from './burger-constructor.module.css';
@@ -44,7 +44,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     totalIngredients.forEach((item) => {
       orderData.push(item._id);
     });
-    const order: Record<string, unknown> = {
+    const order: TOrderData = {
       ingredients: orderData,
     };
 
@@ -65,13 +65,11 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
   const waiter = <Waiter />;
 
-  const { isLoading, isModalShow, error } = useSelector(
-    (store: Record<string, unknown>) => ({
-      isModalShow: (store.order as Record<string, unknown>).isModalShow as boolean,
-      isLoading: (store.order as Record<string, unknown>).isLoading as boolean,
-      error: (store.order as Record<string, unknown>).error as string,
-    })
-  );
+  const { isLoading, isModalShow, error } = useSelector((store: TStore) => ({
+    isModalShow: store.order.isModalShow,
+    isLoading: store.order.isLoading,
+    error: store.order.error,
+  }));
 
   const errorModal = (
     <Modal
@@ -86,10 +84,9 @@ export const BurgerConstructor = (): React.JSX.Element => {
     </Modal>
   );
 
-  const { bun, mainAndSauce } = useSelector((store: Record<string, unknown>) => ({
-    bun: (store.constructorBuilder as Record<string, unknown>).bun as TIngredient,
-    mainAndSauce: (store.constructorBuilder as Record<string, unknown>)
-      .mainAndSauce as TIngredient[],
+  const { bun, mainAndSauce } = useSelector((store: TStore) => ({
+    bun: store.constructorBuilder.bun,
+    mainAndSauce: store.constructorBuilder.mainAndSauce,
   }));
 
   const [, dropTarget] = useDrop({
@@ -138,7 +135,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
             type="top"
             isLocked={true}
             text={(bun?.name ?? '') + (bun?.name ? ' (верх)' : '')}
-            price={bun?.price ?? ''}
+            price={bun?.price ?? 0}
             thumbnail={bun?.image ?? logo}
           />
         </div>
@@ -153,7 +150,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
             type="bottom"
             isLocked={true}
             text={(bun?.name ?? '') + (bun?.name ? ' (низ)' : '')}
-            price={bun?.price ?? ''}
+            price={bun?.price ?? 0}
             thumbnail={bun?.image ?? logo}
           />
         </div>
