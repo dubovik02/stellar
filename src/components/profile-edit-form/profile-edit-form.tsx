@@ -1,4 +1,5 @@
-import { updateUserProfile } from '@/services/user/user-slice';
+import { useAppDispatch, type RootStoreState } from '@/services/store';
+import { setErrorText, updateUserProfile } from '@/services/user/user-slice';
 import { errMessages } from '@/utils/validator';
 import {
   Button,
@@ -7,19 +8,16 @@ import {
   PasswordInput,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState, type ChangeEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { MessageDialog } from '../message-dialog/message-dialog';
 import { Modal } from '../modal/modal';
 import { Waiter } from '../waiter/waiter';
 
-import type { TStore } from '@/utils/types';
-import type { UnknownAction } from '@reduxjs/toolkit';
-
 import customStyles from './profile-edit-form.module.css';
 
 export const ProfileEditForm = (): React.JSX.Element => {
-  const { user, isLoading, error } = useSelector((store: TStore) => ({
+  const { user, isLoading, error } = useSelector((store: RootStoreState) => ({
     user: store.user.user,
     isLoading: store.user.isLoading,
     error: store.user.error,
@@ -30,12 +28,12 @@ export const ProfileEditForm = (): React.JSX.Element => {
 
   const waiter = <Waiter />;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const modal = (
     <Modal
       onCloseEvent={() => {
-        dispatch({ type: 'user/setErrorText', payload: '' });
+        dispatch(setErrorText(''));
       }}
     >
       <MessageDialog messageType={'error'} message={`Ошибка при входе: ${error}`} />
@@ -47,12 +45,12 @@ export const ProfileEditForm = (): React.JSX.Element => {
       className={customStyles.fieldContainer}
       onSubmit={(e) => {
         e.preventDefault();
-        dispatch(
+        void dispatch(
           updateUserProfile({
             name: name,
             email: email,
             password: password,
-          }) as unknown as UnknownAction
+          })
         );
       }}
     >

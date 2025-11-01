@@ -4,7 +4,8 @@ import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
-import type { TIngredient, TStore } from '@/utils/types';
+import type { RootStoreState } from '@/services/store';
+import type { TIngredient } from '@/utils/types';
 import type { Ref } from 'react';
 
 import styles from './burger-component.module.css';
@@ -21,7 +22,7 @@ export const BurgerComponent = (props: TIngredient): React.JSX.Element => {
     }),
   });
 
-  const { bun, mainAndSauce } = useSelector((store: TStore) => ({
+  const { bun, mainAndSauce } = useSelector((store: RootStoreState) => ({
     bun: store.constructorBuilder.bun,
     mainAndSauce: store.constructorBuilder.mainAndSauce,
   }));

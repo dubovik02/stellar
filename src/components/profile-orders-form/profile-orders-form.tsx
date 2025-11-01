@@ -1,3 +1,11 @@
+import { OrderCard } from '../order-card/order-card';
+
 export const ProfileOrdersForm = (): React.JSX.Element => {
-  return <div>Скоро будет</div>;
+  return (
+    <>
+      <div>
+        <OrderCard />
+      </div>
+    </>
+  );
 };

@@ -9,18 +9,16 @@ import { loadIngredients } from '@/services/ingredients/burger-ingredients-slice
 import { checkUserAuth } from '@/services/user/user-slice';
 import { RoutePath } from '@/utils/route-config';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
 
+import { useAppDispatch } from '../../services/store';
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
 import { ProfileEditForm } from '../profile-edit-form/profile-edit-form';
 import { ProfileOrdersForm } from '../profile-orders-form/profile-orders-form';
 import { Protected } from '../protected-route/protected-route';
-
-import type { UnknownAction } from '@reduxjs/toolkit';
 
 import styles from './app.module.css';
 
@@ -35,9 +33,9 @@ export const App = (): React.JSX.Element => {
     void navigate(-1);
   };
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(loadIngredients() as unknown as UnknownAction);
+    void dispatch(loadIngredients());
   }, []);
 
   const windowModal = <IngredientDetails />;
@@ -49,7 +47,7 @@ export const App = (): React.JSX.Element => {
   );
 
   useEffect(() => {
-    dispatch(checkUserAuth() as unknown as UnknownAction);
+    void dispatch(checkUserAuth());
   }, []);
 
   return (

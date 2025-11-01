@@ -148,5 +148,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setIsAuthChecked, setUser } = userSlice.actions;
+export const { setIsAuthChecked, setUser, setIsLoading, setErrorText } =
+  userSlice.actions;
 export const { selectUser, selectIsAuthChecked } = userSlice.selectors;

@@ -46,3 +46,5 @@ export const orderSlice = createSlice({
       });
   },
 });
+
+export const { hideErorrModal, hideOrderModal } = orderSlice.actions;

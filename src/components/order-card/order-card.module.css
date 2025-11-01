@@ -1,0 +1,20 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+/* .orderNumber {
+
+}
+
+.orderName {
+
+}
+
+.orderStatus {
+
+} */

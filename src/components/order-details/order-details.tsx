@@ -1,12 +1,12 @@
 import { CheckMarkIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useSelector } from 'react-redux';
 
-import type { TStore } from '@/utils/types';
+import type { RootStoreState } from '@/services/store';
 
 import styles from './order-details.module.css';
 
 export const OrderDetails = (): React.JSX.Element => {
-  const { order } = useSelector((store: TStore) => ({
+  const { order } = useSelector((store: RootStoreState) => ({
     order: store.order.data,
   }));
 

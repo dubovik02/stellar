@@ -1,6 +1,6 @@
 export default {
   api: {
-    baseUrl: 'https://norma.nomoreparties.space/api',
+    baseUrl: 'https://norma.education-services.ru/api',
     ingredientsUrl: '/ingredients',
     orderUrl: '/orders',
     passwordResetUrl: '/password-reset',

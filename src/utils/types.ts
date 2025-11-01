@@ -29,6 +29,13 @@ export type TOrder = {
   success: boolean;
 };
 
+export type TOrderCard = {
+  number: number;
+  name: string;
+  ingredients: TIngredient[];
+  status: string;
+};
+
 export type TOrderData = {
   ingredients: string[];
 };
@@ -86,9 +93,9 @@ export type TUserInitialState = {
   error: string;
 };
 //store
-export type TStore = {
-  user: TUserInitialState;
-  constructorBuilder: TConstructorState;
-  ingredients: TInintialIngredientsState;
-  order: TOrderState;
-};
+// export type TStore = {
+//   user: TUserInitialState;
+//   constructorBuilder: TConstructorState;
+//   ingredients: TInintialIngredientsState;
+//   order: TOrderState;
+// };

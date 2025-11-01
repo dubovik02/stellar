@@ -1,7 +1,8 @@
 import { MessageDialog } from '@/components/message-dialog/message-dialog';
 import { Modal } from '@/components/modal/modal';
 import { Waiter } from '@/components/waiter/waiter';
-import { newUserRegister } from '@/services/user/user-slice';
+import { useAppDispatch, type RootStoreState } from '@/services/store';
+import { newUserRegister, setErrorText } from '@/services/user/user-slice';
 import { RoutePath } from '@/utils/route-config';
 import { errMessages } from '@/utils/validator';
 import {
@@ -11,16 +12,13 @@ import {
   PasswordInput,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState, type ChangeEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
-import type { TStore } from '@/utils/types';
-import type { UnknownAction } from '@reduxjs/toolkit';
 
 import styles from '../forms-styles.module.css';
 
 export const Register = (): React.JSX.Element => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
@@ -29,7 +27,7 @@ export const Register = (): React.JSX.Element => {
   const [password, setPassword] = useState('');
 
   const waiter = <Waiter />;
-  const { isLoading, error } = useSelector((store: TStore) => ({
+  const { isLoading, error } = useSelector((store: RootStoreState) => ({
     isLoading: store.user.isLoading,
     error: store.user.error,
   }));
@@ -37,7 +35,7 @@ export const Register = (): React.JSX.Element => {
   const modal = (
     <Modal
       onCloseEvent={() => {
-        dispatch({ type: 'user/setErrorText', payload: '' });
+        dispatch(setErrorText(''));
       }}
     >
       <MessageDialog
@@ -53,12 +51,12 @@ export const Register = (): React.JSX.Element => {
         className={styles.form}
         onSubmit={(e) => {
           e.preventDefault();
-          dispatch(
+          void dispatch(
             newUserRegister({
               name: name,
               email: email,
               password: password,
-            }) as unknown as UnknownAction
+            })
           );
         }}
       >

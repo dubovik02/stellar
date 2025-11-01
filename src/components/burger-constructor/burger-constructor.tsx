@@ -1,4 +1,10 @@
-import { loadOrder } from '@/services/order-details/order-details-slice';
+import { addBun, addIngredient } from '@/services/constructor/burger-constructor-slice';
+import {
+  hideErorrModal,
+  hideOrderModal,
+  loadOrder,
+} from '@/services/order-details/order-details-slice';
+import { useAppDispatch, type RootStoreState } from '@/services/store';
 import { selectUser } from '@/services/user/user-slice';
 import { RoutePath } from '@/utils/route-config';
 import {
@@ -8,18 +14,17 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useMemo } from 'react';
 import { useDrop } from 'react-dnd';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import logo from '../../pictures/stub.svg';
-import { BurgerElement } from '../app/burger-element/burger-element';
+import { BurgerElement } from '../burger-element/burger-element';
 import { MessageDialog } from '../message-dialog/message-dialog';
 import { Modal } from '../modal/modal';
 import { OrderDetails } from '../order-details/order-details';
 import { Waiter } from '../waiter/waiter';
 
-import type { UnknownAction } from '@reduxjs/toolkit';
-import type { TIngredient, TOrderData, TStore } from '@utils/types';
+import type { TIngredient, TOrderData } from '@utils/types';
 import type { Ref } from 'react';
 
 import styles from './burger-constructor.module.css';
@@ -48,15 +53,15 @@ export const BurgerConstructor = (): React.JSX.Element => {
       ingredients: orderData,
     };
 
-    dispatch(loadOrder(order) as unknown as UnknownAction);
+    void dispatch(loadOrder(order));
   }
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const modal = (
     <Modal
       onCloseEvent={() => {
-        dispatch({ type: 'order/hideOrderModal' });
+        dispatch(hideOrderModal());
       }}
     >
       <OrderDetails></OrderDetails>
@@ -65,7 +70,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
   const waiter = <Waiter />;
 
-  const { isLoading, isModalShow, error } = useSelector((store: TStore) => ({
+  const { isLoading, isModalShow, error } = useSelector((store: RootStoreState) => ({
     isModalShow: store.order.isModalShow,
     isLoading: store.order.isLoading,
     error: store.order.error,
@@ -74,7 +79,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const errorModal = (
     <Modal
       onCloseEvent={() => {
-        dispatch({ type: 'order/hideErrorModal' });
+        dispatch(hideErorrModal());
       }}
     >
       <MessageDialog
@@ -84,7 +89,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     </Modal>
   );
 
-  const { bun, mainAndSauce } = useSelector((store: TStore) => ({
+  const { bun, mainAndSauce } = useSelector((store: RootStoreState) => ({
     bun: store.constructorBuilder.bun,
     mainAndSauce: store.constructorBuilder.mainAndSauce,
   }));
@@ -93,15 +98,9 @@ export const BurgerConstructor = (): React.JSX.Element => {
     accept: 'ingredient',
     drop(item) {
       if ((item as TIngredient).type === 'bun') {
-        dispatch({
-          type: 'constructorBuilder/addBun',
-          payload: { ...(item as TIngredient) },
-        });
+        dispatch(addBun(item as TIngredient));
       } else {
-        dispatch({
-          type: 'constructorBuilder/addIngredient',
-          payload: { ...(item as TIngredient) },
-        });
+        dispatch(addIngredient({ ...(item as TIngredient) }));
       }
     },
   });

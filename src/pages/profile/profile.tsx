@@ -1,10 +1,8 @@
+import { useAppDispatch } from '@/services/store';
 import { logout } from '@/services/user/user-slice';
 import { RoutePath } from '@/utils/route-config';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
-
-import type { UnknownAction } from '@reduxjs/toolkit';
 
 import customStyles from './profile.module.css';
 
@@ -17,7 +15,7 @@ export const Profile = (): React.JSX.Element => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [indexDescription, setIndexDescription] = useState(PROFILE_DESCRIPTION);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   return (
@@ -48,7 +46,7 @@ export const Profile = (): React.JSX.Element => {
           onClick={() => {
             setActiveIndex(2);
             setIndexDescription(EXIT);
-            dispatch(logout() as unknown as UnknownAction);
+            void dispatch(logout());
           }}
         >
           Выход
