@@ -1,4 +1,6 @@
 import { NotFoundErorPage } from '@/pages/error-page/error-page';
+import { FeedOrder } from '@/pages/feed-order/feed-order';
+import { Feed } from '@/pages/feed/feed';
 import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
 import { Home } from '@/pages/home/home';
 import { Login } from '@/pages/login/login';
@@ -14,6 +16,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { AppHeader } from '@components/app-header/app-header';
 
 import { useAppDispatch } from '../../services/store';
+import { BaseFeed } from '../base-feed/base-feed';
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
 import { ProfileEditForm } from '../profile-edit-form/profile-edit-form';
@@ -59,6 +62,11 @@ export const App = (): React.JSX.Element => {
             <Route path={RoutePath.home} element={<Home />} />
             <Route path={RoutePath.main} element={<Home />} />
             <Route path={RoutePath.ingredients} element={windowModal} />
+            <Route path={RoutePath.feed} element={<Feed />}>
+              <Route path={RoutePath.feed} element={<BaseFeed />} />
+              <Route path={RoutePath.feed_base} element={<BaseFeed />} />
+              <Route path={RoutePath.feed_order} element={<FeedOrder />} />
+            </Route>
             <Route path={RoutePath.not_found} element={<NotFoundErorPage />} />
             <Route
               path={RoutePath.reset_password}

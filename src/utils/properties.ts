@@ -11,4 +11,8 @@ export default {
     tokenUrl: '/auth/token',
     userUrl: '/auth/user',
   },
+  websocket: {
+    baseUrl: 'wss://norma.education-services.ru',
+    ordersAll: '/orders/all',
+  },
 };

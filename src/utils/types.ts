@@ -39,6 +39,17 @@ export type TOrderCard = {
 export type TOrderData = {
   ingredients: string[];
 };
+
+export type TOrderFeed = {
+  ingredients: string[];
+  _id: string;
+  status: string;
+  name: string;
+  number: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 //user
 export type TUser = {
   name?: string;
@@ -92,6 +103,21 @@ export type TUserInitialState = {
   isLoading: boolean;
   error: string;
 };
+
+export type TFeedState = {
+  success: boolean;
+  orders: TOrderFeed[];
+  total: number;
+  totalToday: number;
+};
+
+export type TFeedInitialState = {
+  data: TFeedState;
+  isLoading: boolean;
+  isModalShow: boolean;
+  error?: string;
+};
+
 //store
 // export type TStore = {
 //   user: TUserInitialState;

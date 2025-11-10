@@ -10,6 +10,9 @@ enum AppRoutes {
   PROFILE_ORDERS = 'profile_orders',
   NOT_FOUND = 'not_found',
   INGREDIENTS = 'ingredients',
+  FEED = 'feed',
+  FEED_BASE = 'feed_base',
+  FEED_ORDER = 'feed_order',
 }
 
 export const RoutePath: Record<AppRoutes, string> = {
@@ -23,5 +26,8 @@ export const RoutePath: Record<AppRoutes, string> = {
   [AppRoutes.PROFILE]: '/profile',
   [AppRoutes.PROFILE_PROFILE]: '/profile/profile',
   [AppRoutes.PROFILE_ORDERS]: '/profile/orders',
+  [AppRoutes.FEED]: '/feed',
+  [AppRoutes.FEED_BASE]: '/feed/base',
+  [AppRoutes.FEED_ORDER]: '/feed/:feedId',
   [AppRoutes.NOT_FOUND]: '*',
 };

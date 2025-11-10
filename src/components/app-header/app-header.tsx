@@ -19,17 +19,31 @@ export const AppHeader = (): React.JSX.Element => {
     return '';
   };
 
+  const isIconActive = (path: string): boolean => {
+    if (location.pathname.includes(path)) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <header className={styles.header}>
       <nav className={`${styles.menu} p-4`}>
         <div className={styles.menu_part_left}>
           {/* Тут должны быть ссылки, а не например кнопки или абзацы */}
           <a href="/" className={`${styles.link} ${setActiveItemClass(RoutePath.main)}`}>
-            <BurgerIcon type="primary" />
+            <BurgerIcon
+              type={`${isIconActive(RoutePath.main) ? 'primary' : 'secondary'}`}
+            />
             <p className="text text_type_main-default ml-2">Конструктор</p>
           </a>
-          <a href="/feed" className={`${styles.link} ml-10`}>
-            <ListIcon type="secondary" />
+          <a
+            href="/feed"
+            className={`${styles.link} ml-10 ${setActiveItemClass(RoutePath.feed)}`}
+          >
+            <ListIcon
+              type={`${isIconActive(RoutePath.feed) ? 'primary' : 'secondary'}`}
+            />
             <p className="text text_type_main-default ml-2">Лента заказов</p>
           </a>
         </div>
@@ -40,7 +54,9 @@ export const AppHeader = (): React.JSX.Element => {
           href="/profile"
           className={`${styles.link} ${styles.link_position_last} ${setActiveItemClass(RoutePath.profile)}`}
         >
-          <ProfileIcon type="secondary" />
+          <ProfileIcon
+            type={`${isIconActive(RoutePath.profile) ? 'primary' : 'secondary'}`}
+          />
           <p className="text text_type_main-default ml-2">Личный кабинет</p>
         </a>
       </nav>
