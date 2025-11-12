@@ -14,5 +14,6 @@ export default {
   websocket: {
     baseUrl: 'wss://norma.education-services.ru',
     ordersAll: '/orders/all',
+    usersOrders: '/orders',
   },
 };

@@ -1,6 +1,7 @@
+import { createDataString, createStatus, totalPrice } from '@/utils/order-card-utils';
 import { CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import type { RootStoreState } from '@/services/store';
 import type { TOrderFeed } from '@/utils/types';
@@ -8,6 +9,8 @@ import type { TOrderFeed } from '@/utils/types';
 import styles from './order-card.module.css';
 
 export const OrderCard = (props: TOrderFeed): React.JSX.Element => {
+  const location = useLocation();
+
   const { ingredients } = useSelector((store: RootStoreState) => ({
     ingredients: store.ingredients.data,
   }));
@@ -44,52 +47,11 @@ export const OrderCard = (props: TOrderFeed): React.JSX.Element => {
     );
   };
 
-  const totalPrice = (): number => {
-    const currentIngredients = ingredients.filter((item) => {
-      return props.ingredients.includes(item._id);
-    });
-    let sum = 0;
-    currentIngredients.forEach((item) => {
-      if (item.type === 'bun') {
-        sum = sum + 2 * item.price;
-      } else {
-        sum = sum + item.price;
-      }
-    });
-    return sum;
-  };
-
-  const createStatus = (status: string): string => {
-    switch (status) {
-      case 'done':
-        return 'Выполнен';
-      case 'created':
-        return 'Создается';
-      case 'pending':
-        return 'Выполняется';
-      default:
-        return status;
-    }
-  };
-
-  const createDataString = (date: Date): string => {
-    if (date.getDate() === new Date(Date.now()).getDate()) {
-      const timeStr =
-        (date.getHours() > 9 ? date.getHours() : '0' + date.getHours()) +
-        ':' +
-        (date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()) +
-        ':' +
-        (date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds());
-      return `Сегодня, ${timeStr}`;
-    }
-    return date.toLocaleString();
-  };
-
   return (
     <Link
       key={props._id}
-      to={`/feed/${props._id}`}
-      // state={{ background: location }}
+      to={`/feed/${props.number}`}
+      state={{ background: location }}
       className={styles.link}
     >
       <div className={styles.mainContainer}>
@@ -102,7 +64,7 @@ export const OrderCard = (props: TOrderFeed): React.JSX.Element => {
         <div className={styles.ingredientsContainer}>
           <div className={styles.imageContainer}>{createImg()}</div>
           <div className={styles.priceContainer}>
-            <span className="text text_type_digits-default">{`${totalPrice().toLocaleString()}`}</span>
+            <span className="text text_type_digits-default">{`${totalPrice(ingredients, props.ingredients).toLocaleString()}`}</span>
             <CurrencyIcon type="primary" />
           </div>
         </div>

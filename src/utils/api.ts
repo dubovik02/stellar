@@ -4,6 +4,7 @@ import type {
   TInfoResponse,
   TOrder,
   TOrderData,
+  TOrderInfoResponse,
   TRefreshTokenResponse,
   TUser,
   TUserInfoResponse,
@@ -151,6 +152,20 @@ export function createOrder(componentIdObj: TOrderData): Promise<TOrder> {
     },
     body: JSON.stringify(componentIdObj),
   }).then(checkResponse<TOrder>);
+}
+
+export function getOrderInfo(orderNumber: string): Promise<TOrderInfoResponse> {
+  return fetchWithRefresh(
+    properties.api.baseUrl + properties.api.orderUrl + '/' + orderNumber,
+    {
+      method: 'GET',
+
+      headers: {
+        'Content-Type': 'application/json',
+        //authorization: localStorage.getItem('accessToken')!,
+      },
+    }
+  ).then(checkResponse<TOrderInfoResponse>);
 }
 
 export const fetchWithRefresh = async (

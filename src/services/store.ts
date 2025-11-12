@@ -1,4 +1,5 @@
 import { socketMiddleware } from '@/utils/feed-middleware';
+import { userFeedMiddleware } from '@/utils/user-feed-middleware';
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 
@@ -12,6 +13,15 @@ import {
   onOpen,
 } from '../services/feed/feed-actions';
 import rootReducer from './root-reducer';
+import {
+  connectingUF,
+  connectUF,
+  disconnectUF,
+  onCloseUF,
+  onErrorUF,
+  onMessageUF,
+  onOpenUF,
+} from './user-feed/user-feed-actions';
 
 const feedMiddleware = socketMiddleware({
   connect: connect,
@@ -23,10 +33,20 @@ const feedMiddleware = socketMiddleware({
   onError: onError,
 });
 
+const ufMiddleware = userFeedMiddleware({
+  connectUF: connectUF,
+  disconnectUF: disconnectUF,
+  onConnectingUF: connectingUF,
+  onMessageUF: onMessageUF,
+  onCloseUF: onCloseUF,
+  onOpenUF: onOpenUF,
+  onErrorUF: onErrorUF,
+});
+
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(feedMiddleware);
+    return getDefaultMiddleware().concat(feedMiddleware).concat(ufMiddleware);
   },
   devTools: process.env.NODE_ENV !== 'production',
 });

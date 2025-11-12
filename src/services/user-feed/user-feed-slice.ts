@@ -1,23 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { connecting, onOpen, onError, onClose, onMessage } from './feed-actions';
+import {
+  connectingUF,
+  onCloseUF,
+  onErrorUF,
+  onMessageUF,
+  onOpenUF,
+} from './user-feed-actions';
 
-import type { TFeedInitialState, TFeedState } from '@/utils/types';
+import type { TUserFeedInitialState, TUserFeedState } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: TFeedInitialState = {
+const initialState: TUserFeedInitialState = {
   data: {
     success: false,
     orders: [],
-    total: 0,
-    totalToday: 0,
   },
   isLoading: false,
   error: '',
 };
 
-export const feedSlice = createSlice({
-  name: 'feed',
+export const userFeedSlice = createSlice({
+  name: 'userFeed',
   initialState,
   reducers: {
     setIsLoading: (state, action: PayloadAction<boolean>) => {
@@ -30,23 +34,23 @@ export const feedSlice = createSlice({
   //selectors: {},
   extraReducers: (builder) => {
     builder
-      .addCase(connecting, (state) => {
+      .addCase(connectingUF, (state) => {
         state.isLoading = true;
       })
-      .addCase(onOpen, (state) => {
+      .addCase(onOpenUF, (state) => {
         state.isLoading = false;
       })
-      .addCase(onError, (state, action) => {
+      .addCase(onErrorUF, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
-      .addCase(onClose, (state) => {
+      .addCase(onCloseUF, (state) => {
         state.isLoading = false;
       })
-      .addCase(onMessage, (state, action: PayloadAction<TFeedState>) => {
+      .addCase(onMessageUF, (state, action: PayloadAction<TUserFeedState>) => {
         state.data = action.payload;
       });
   },
 });
 
-export const { setIsLoading, setErrorText } = feedSlice.actions;
+export const { setIsLoading, setErrorText } = userFeedSlice.actions;
