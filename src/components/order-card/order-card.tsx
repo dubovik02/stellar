@@ -50,7 +50,7 @@ export const OrderCard = (props: TOrderFeed): React.JSX.Element => {
   return (
     <Link
       key={props._id}
-      to={`/feed/${props.number}`}
+      to={`${location.pathname}/${props.number}`}
       state={{ background: location }}
       className={styles.link}
     >

@@ -16,7 +16,6 @@ export const BaseFeed = (props: TBaseFeedProps): React.JSX.Element => {
   const isFeedMode = props.connectMode === CONNECT_MODE.FEED;
   const dispatch = useAppDispatch();
   useEffect(() => {
-    //dispatch(connect(props.wssUrl));
     if (isFeedMode) {
       dispatch(connect(props.wssUrl));
     } else {
@@ -28,6 +27,10 @@ export const BaseFeed = (props: TBaseFeedProps): React.JSX.Element => {
     orders: isFeedMode ? store.feed.data : store.userFeed.data,
     isLoading: isFeedMode ? store.feed.isLoading : store.userFeed.isLoading,
   }));
+
+  const resultOrders = Array.from(orders.orders).sort((itemA, itemB) => {
+    return itemA.createdAt < itemB.createdAt ? 1 : -1;
+  });
 
   const getStatusNumber = (filterStatus: string): string[] => {
     const result: string[] = [];
@@ -51,7 +54,7 @@ export const BaseFeed = (props: TBaseFeedProps): React.JSX.Element => {
       )}
       <div className={styles.dataContainer}>
         <div className={styles.ordersContainer}>
-          {orders.orders.map((item) => {
+          {resultOrders.map((item) => {
             return <OrderCard {...item} key={item._id} />;
           })}
           {isLoading && waiter}

@@ -27,7 +27,6 @@ export const feedSlice = createSlice({
       state.error = action.payload;
     },
   },
-  //selectors: {},
   extraReducers: (builder) => {
     builder
       .addCase(connecting, (state) => {

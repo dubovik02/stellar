@@ -134,7 +134,7 @@ export const App = (): React.JSX.Element => {
                     wssUrl={
                       properties.websocket.baseUrl +
                       properties.websocket.usersOrders +
-                      `/?token=${localStorage.getItem('accessToken')?.split(' ')[1]}`
+                      `?token=${localStorage.getItem('accessToken')?.split(' ')[1]}`
                     }
                     isStatisticDataWillShow={false}
                     connectMode={CONNECT_MODE.USER_FEED}
@@ -148,6 +148,7 @@ export const App = (): React.JSX.Element => {
             <Routes>
               <Route path="/ingredients/:ingredientId" element={directModal} />
               <Route path="/feed/:feedId" element={orderModal} />
+              <Route path="/profile/orders/:orderId" element={orderModal} />
             </Routes>
           )}
         </main>

@@ -18,7 +18,6 @@ const RECONNECT_PERIOD = 5000;
 
 export const socketMiddleware = <TFeedState>(
   wsActions: WsActions<TFeedState>
-  //withTokenRefresh = false
 ): Middleware<Record<string, never>> => {
   return (store) => {
     let socket: WebSocket | null = null;
@@ -26,7 +25,6 @@ export const socketMiddleware = <TFeedState>(
       wsActions;
     const { dispatch } = store;
     let reconnectTimer: NodeJS.Timeout;
-    //let reconnectTimer;
     let isConnected = false;
     let url = '';
 
@@ -57,26 +55,6 @@ export const socketMiddleware = <TFeedState>(
 
           try {
             const parsedData = JSON.parse(data) as TFeedState;
-
-            // if (withTokenRefresh && parsedData.message === 'Invalid or missing token') {
-            //   refreshToken()
-            //     .then((refreshedData) => {
-            //       const wssUrl = new URL(url);
-            //       wssUrl.searchParams.set(
-            //         'token',
-            //         refreshedData.accessToken.replace('Bearer ', '')
-            //       );
-            //       dispatch(connect(wssUrl.toString()));
-            //     })
-            //     .catch((error) => {
-            //       dispatch(onError((error as Error).message));
-            //     });
-
-            //   dispatch(disconnect());
-
-            //   return;
-            // }
-
             dispatch(onMessage(parsedData));
           } catch (error) {
             dispatch(onError((error as Error).message));
@@ -89,25 +67,11 @@ export const socketMiddleware = <TFeedState>(
       if (socket && disconnect.match(action)) {
         clearTimeout(reconnectTimer);
         isConnected = false;
-        //reconnectTimer = 0;
         socket.close();
         socket = null;
 
         return;
       }
-
-      // if (socket && sendMessage?.match(action)) {
-      //   const { payload } = action;
-      //   try {
-      //     const stringifiedPayload = JSON.stringify(payload);
-      //     socket.send(stringifiedPayload);
-      //   } catch (error) {
-      //     dispatch(onError((error as Error).message));
-      //   }
-
-      //   return;
-      // }
-
       return next(action);
     };
   };

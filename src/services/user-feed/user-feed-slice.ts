@@ -31,7 +31,6 @@ export const userFeedSlice = createSlice({
       state.error = action.payload;
     },
   },
-  //selectors: {},
   extraReducers: (builder) => {
     builder
       .addCase(connectingUF, (state) => {

@@ -29,7 +29,8 @@ export const OrderCardFull = (): React.JSX.Element => {
   }));
 
   const urlId = useLocation();
-  const orderNumb = urlId.pathname.split('/')[2];
+  const urlArr = urlId.pathname.split('/');
+  const orderNumb = urlArr[urlArr.length - 1];
 
   const dispatch = useAppDispatch();
   useEffect(() => {

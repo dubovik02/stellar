@@ -35,7 +35,6 @@ export const userFeedMiddleware = <TUserFeedState>(
     } = wsActions;
     const { dispatch } = store;
     let reconnectTimer: NodeJS.Timeout;
-    //let reconnectTimer;
     let isConnected = false;
     let url = '';
 
@@ -102,25 +101,11 @@ export const userFeedMiddleware = <TUserFeedState>(
       if (socket && disconnectUF.match(action)) {
         clearTimeout(reconnectTimer);
         isConnected = false;
-        //reconnectTimer = 0;
         socket.close();
         socket = null;
 
         return;
       }
-
-      // if (socket && sendMessage?.match(action)) {
-      //   const { payload } = action;
-      //   try {
-      //     const stringifiedPayload = JSON.stringify(payload);
-      //     socket.send(stringifiedPayload);
-      //   } catch (error) {
-      //     dispatch(onError((error as Error).message));
-      //   }
-
-      //   return;
-      // }
-
       return next(action);
     };
   };
