@@ -24,6 +24,10 @@ export const constructorSlice = createSlice({
         return item.itemId !== action.payload.itemId;
       });
     },
+    clearAll: (state) => {
+      state.bun = null;
+      state.mainAndSauce = [];
+    },
     reorderIngredients: (state, action) => {
       const sourceId = (action.payload as Record<string, unknown>).sourceId ?? 'emptyId';
       const targetId = (action.payload as Record<string, unknown>).targetId ?? 'emptyId';
@@ -54,5 +58,5 @@ export const constructorSlice = createSlice({
   },
 });
 
-export const { addBun, addIngredient, delIngredient, reorderIngredients } =
+export const { addBun, addIngredient, delIngredient, reorderIngredients, clearAll } =
   constructorSlice.actions;

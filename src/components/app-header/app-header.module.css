@@ -21,6 +21,10 @@
   text-decoration: none;
 }
 
+.link:first-of-type {
+  margin-right: 24px;
+}
+
 .link_active {
   color: var(--text-primary-color);
 }

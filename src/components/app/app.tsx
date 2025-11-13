@@ -13,7 +13,7 @@ import properties from '@/utils/properties';
 import { RoutePath } from '@/utils/route-config';
 import { CONNECT_MODE } from '@/utils/types';
 import { useEffect } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
 
@@ -104,7 +104,7 @@ export const App = (): React.JSX.Element => {
                 localStorage.getItem('canShowReset') === 'true' ? (
                   <ResetPassword />
                 ) : (
-                  <Home />
+                  <Navigate to={RoutePath.login} />
                 )
               }
             />
@@ -142,6 +142,7 @@ export const App = (): React.JSX.Element => {
                 }
               />
             </Route>
+            <Route path={RoutePath.profile_orders_order} element={<OrderCardFull />} />
           </Routes>
 
           {background && (

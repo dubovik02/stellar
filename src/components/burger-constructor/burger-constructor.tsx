@@ -1,10 +1,14 @@
-import { addBun, addIngredient } from '@/services/constructor/burger-constructor-slice';
+import {
+  addBun,
+  addIngredient,
+  clearAll,
+} from '@/services/constructor/burger-constructor-slice';
 import {
   hideErorrModal,
   hideOrderModal,
   loadOrder,
 } from '@/services/order-details/order-details-slice';
-import { useAppDispatch, type RootStoreState } from '@/services/store';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import { selectUser } from '@/services/user/user-slice';
 import { RoutePath } from '@/utils/route-config';
 import {
@@ -14,7 +18,6 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useMemo } from 'react';
 import { useDrop } from 'react-dnd';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import logo from '../../pictures/stub.svg';
@@ -30,7 +33,7 @@ import type { Ref } from 'react';
 import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = (): React.JSX.Element => {
-  const user = useSelector(selectUser);
+  const user = useAppSelector(selectUser);
   const navigate = useNavigate();
   function handleOrderClick(): void {
     if (bun === null) {
@@ -62,6 +65,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     <Modal
       onCloseEvent={() => {
         dispatch(hideOrderModal());
+        dispatch(clearAll());
       }}
     >
       <OrderDetails></OrderDetails>
@@ -70,7 +74,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
   const waiter = <Waiter />;
 
-  const { isLoading, isModalShow, error } = useSelector((store: RootStoreState) => ({
+  const { isLoading, isModalShow, error } = useAppSelector((store) => ({
     isModalShow: store.order.isModalShow,
     isLoading: store.order.isLoading,
     error: store.order.error,
@@ -89,7 +93,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     </Modal>
   );
 
-  const { bun, mainAndSauce } = useSelector((store: RootStoreState) => ({
+  const { bun, mainAndSauce } = useAppSelector((store) => ({
     bun: store.constructorBuilder.bun,
     mainAndSauce: store.constructorBuilder.mainAndSauce,
   }));

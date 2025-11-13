@@ -1,10 +1,9 @@
+import { useAppSelector } from '@/services/store';
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useDrag } from 'react-dnd';
-import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
-import type { RootStoreState } from '@/services/store';
 import type { TIngredient } from '@/utils/types';
 import type { Ref } from 'react';
 
@@ -22,7 +21,7 @@ export const BurgerComponent = (props: TIngredient): React.JSX.Element => {
     }),
   });
 
-  const { bun, mainAndSauce } = useSelector((store: RootStoreState) => ({
+  const { bun, mainAndSauce } = useAppSelector((store) => ({
     bun: store.constructorBuilder.bun,
     mainAndSauce: store.constructorBuilder.mainAndSauce,
   }));

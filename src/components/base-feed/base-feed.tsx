@@ -1,13 +1,11 @@
 import { OrderCard } from '@/components/order-card/order-card';
 import { Waiter } from '@/components/waiter/waiter';
-import { connect } from '@/services/feed/feed-actions';
-import { useAppDispatch } from '@/services/store';
-import { connectUF } from '@/services/user-feed/user-feed-actions';
+import { connect, disconnect } from '@/services/feed/feed-actions';
+import { useAppDispatch, useAppSelector } from '@/services/store';
+import { connectUF, disconnectUF } from '@/services/user-feed/user-feed-actions';
 import { CONNECT_MODE } from '@/utils/types';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
-import type { RootStoreState } from '@/services/store';
 import type { TBaseFeedProps, TFeedState } from '@/utils/types';
 
 import styles from './base-feed.module.css';
@@ -21,9 +19,17 @@ export const BaseFeed = (props: TBaseFeedProps): React.JSX.Element => {
     } else {
       dispatch(connectUF(props.wssUrl));
     }
+
+    return (): void => {
+      if (isFeedMode) {
+        dispatch(disconnect());
+      } else {
+        dispatch(disconnectUF());
+      }
+    };
   }, []);
 
-  const { orders, isLoading } = useSelector((store: RootStoreState) => ({
+  const { orders, isLoading } = useAppSelector((store) => ({
     orders: isFeedMode ? store.feed.data : store.userFeed.data,
     isLoading: isFeedMode ? store.feed.isLoading : store.userFeed.isLoading,
   }));

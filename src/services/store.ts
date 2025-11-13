@@ -1,7 +1,7 @@
 import { socketMiddleware } from '@/utils/feed-middleware';
 import { userFeedMiddleware } from '@/utils/user-feed-middleware';
 import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   connect,
@@ -22,6 +22,8 @@ import {
   onMessageUF,
   onOpenUF,
 } from './user-feed/user-feed-actions';
+
+import type { TypedUseSelectorHook } from 'react-redux';
 
 const feedMiddleware = socketMiddleware({
   connect: connect,
@@ -52,6 +54,8 @@ const store = configureStore({
 });
 
 export type AppDispatch = typeof store.dispatch;
+
+export const useAppSelector: TypedUseSelectorHook<RootStoreState> = useSelector;
 
 export type RootStoreState = ReturnType<typeof store.getState>;
 

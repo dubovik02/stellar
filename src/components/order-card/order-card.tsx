@@ -1,9 +1,8 @@
+import { useAppSelector } from '@/services/store';
 import { createDataString, createStatus, totalPrice } from '@/utils/order-card-utils';
 import { CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
-import type { RootStoreState } from '@/services/store';
 import type { TOrderFeed } from '@/utils/types';
 
 import styles from './order-card.module.css';
@@ -11,7 +10,7 @@ import styles from './order-card.module.css';
 export const OrderCard = (props: TOrderFeed): React.JSX.Element => {
   const location = useLocation();
 
-  const { ingredients } = useSelector((store: RootStoreState) => ({
+  const { ingredients } = useAppSelector((store) => ({
     ingredients: store.ingredients.data,
   }));
 

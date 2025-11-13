@@ -1,7 +1,5 @@
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/services/store';
 import { useLocation } from 'react-router-dom';
-
-import type { RootStoreState } from '@/services/store';
 
 import styles from './ingredient-details.module.css';
 
@@ -17,7 +15,7 @@ export const IngredientDetails = (): React.JSX.Element => {
 
   const urlId = useLocation();
 
-  const { ingredients } = useSelector((store: RootStoreState) => ({
+  const { ingredients } = useAppSelector((store) => ({
     ingredients: store.ingredients.data,
   }));
 

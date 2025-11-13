@@ -1,14 +1,12 @@
 import { loadDetailOrder } from '@/services/detail-order/detail-order-slice';
-import { useAppDispatch } from '@/services/store';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import { createDataString, createStatus, totalPrice } from '@/utils/order-card-utils';
 import { CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 import { Waiter } from '../waiter/waiter';
 
-import type { RootStoreState } from '@/services/store';
 import type { TIngredient, TOrderFeed } from '@/utils/types';
 
 import styles from './order-card-full.module.css';
@@ -24,7 +22,7 @@ export const OrderCardFull = (): React.JSX.Element => {
     updatedAt: new Date(),
   };
 
-  const { ingredients } = useSelector((store: RootStoreState) => ({
+  const { ingredients } = useAppSelector((store) => ({
     ingredients: store.ingredients.data,
   }));
 
@@ -37,7 +35,7 @@ export const OrderCardFull = (): React.JSX.Element => {
     void dispatch(loadDetailOrder(orderNumb));
   }, []);
 
-  const { order, isLoading } = useSelector((store: RootStoreState) => ({
+  const { order, isLoading } = useAppSelector((store) => ({
     order: store.detailOrder.orders[0] ? store.detailOrder.orders[0] : emptyOrder,
     isLoading: store.detailOrder.isLoading,
   }));

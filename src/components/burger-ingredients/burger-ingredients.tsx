@@ -1,11 +1,10 @@
+import { useAppSelector } from '@/services/store';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import { BurgerComponent } from '../burger-component/burger-component';
 import { Waiter } from '../waiter/waiter';
 
-import type { RootStoreState } from '@/services/store';
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
@@ -73,7 +72,7 @@ const BurgerIngredients = (): React.JSX.Element => {
     setActiveTabIndex(tabNumber);
   }
 
-  const { ingredients, isLoading } = useSelector((store: RootStoreState) => ({
+  const { ingredients, isLoading } = useAppSelector((store) => ({
     ingredients: store.ingredients.data,
     isLoading: store.ingredients.isLoading,
   }));

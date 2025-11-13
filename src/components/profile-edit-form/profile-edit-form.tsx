@@ -1,4 +1,4 @@
-import { useAppDispatch, type RootStoreState } from '@/services/store';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import { setErrorText, updateUserProfile } from '@/services/user/user-slice';
 import { errMessages } from '@/utils/validator';
 import {
@@ -8,7 +8,6 @@ import {
   PasswordInput,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState, type ChangeEvent } from 'react';
-import { useSelector } from 'react-redux';
 
 import { MessageDialog } from '../message-dialog/message-dialog';
 import { Modal } from '../modal/modal';
@@ -17,7 +16,7 @@ import { Waiter } from '../waiter/waiter';
 import customStyles from './profile-edit-form.module.css';
 
 export const ProfileEditForm = (): React.JSX.Element => {
-  const { user, isLoading, error } = useSelector((store: RootStoreState) => ({
+  const { user, isLoading, error } = useAppSelector((store) => ({
     user: store.user.user,
     isLoading: store.user.isLoading,
     error: store.user.error,

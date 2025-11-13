@@ -1,13 +1,12 @@
 import { MessageDialog } from '@/components/message-dialog/message-dialog';
 import { Modal } from '@/components/modal/modal';
 import { Waiter } from '@/components/waiter/waiter';
-import { useAppDispatch, type RootStoreState } from '@/services/store';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import { setErrorText } from '@/services/user/user-slice';
 import { passwordReset } from '@/utils/api';
 import { RoutePath } from '@/utils/route-config';
 import { Button, EmailInput } from '@krgaa/react-developer-burger-ui-components';
 import { useState, type ChangeEvent } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import styles from '../forms-styles.module.css';
@@ -19,7 +18,7 @@ export const ForgotPassword = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
 
   const waiter = <Waiter />;
-  const { isLoading, error } = useSelector((store: RootStoreState) => ({
+  const { isLoading, error } = useAppSelector((store) => ({
     isLoading: store.user.isLoading,
     error: store.user.error,
   }));
