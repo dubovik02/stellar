@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import type { TOrderData, TOrderState } from '@/utils/types';
 
-const initialState: TOrderState = {
+export const initialOrderDetailsState: TOrderState = {
   data: null,
   isLoading: false,
   isModalShow: false,
@@ -20,7 +20,7 @@ export const loadOrder = createAsyncThunk(
 
 export const orderSlice = createSlice({
   name: 'order',
-  initialState: initialState,
+  initialState: initialOrderDetailsState,
   reducers: {
     hideOrderModal: (state) => {
       state.isModalShow = false;

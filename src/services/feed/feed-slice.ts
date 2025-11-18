@@ -5,7 +5,7 @@ import { connecting, onOpen, onError, onClose, onMessage } from './feed-actions'
 import type { TFeedInitialState, TFeedState } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: TFeedInitialState = {
+export const initialFeedState: TFeedInitialState = {
   data: {
     success: false,
     orders: [],
@@ -18,7 +18,7 @@ const initialState: TFeedInitialState = {
 
 export const feedSlice = createSlice({
   name: 'feed',
-  initialState,
+  initialState: initialFeedState,
   reducers: {
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;

@@ -6,6 +6,7 @@
 		"noEmit": true,
 		"types": ["cypress", "node"],
 		"allowImportingTsExtensions": true,
+    "strictNullChecks": true,
 
 		"baseUrl": "..",
 		"paths": {
@@ -16,5 +17,5 @@
 			"@pages/*": ["src/pages/*"]
 		}
 	},
-	"include": ["**/*.ts"]
+	"include": ["**/*.ts", "e2e/isavaliable.cy.ts"]
 }

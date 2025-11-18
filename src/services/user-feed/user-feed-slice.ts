@@ -11,7 +11,7 @@ import {
 import type { TUserFeedInitialState, TUserFeedState } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: TUserFeedInitialState = {
+export const initialUserFeedState: TUserFeedInitialState = {
   data: {
     success: false,
     orders: [],
@@ -22,7 +22,7 @@ const initialState: TUserFeedInitialState = {
 
 export const userFeedSlice = createSlice({
   name: 'userFeed',
-  initialState,
+  initialState: initialUserFeedState,
   reducers: {
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;

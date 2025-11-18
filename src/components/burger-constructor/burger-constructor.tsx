@@ -88,7 +88,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     >
       <MessageDialog
         messageType={'error'}
-        message={`Ошибка при формировании заказ: ${error}`}
+        message={`Ошибка при формировании заказа: ${error}`}
       />
     </Modal>
   );
@@ -132,6 +132,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
       <div
         className={styles.cards__container}
         ref={dropTarget as unknown as Ref<HTMLDivElement>}
+        data-card-test={'constructor'}
       >
         <div className={styles.cards__main}>
           <ConstructorElement

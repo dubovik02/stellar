@@ -11,7 +11,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { TUser, TUserInitialState } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: TUserInitialState = {
+export const initialUserState: TUserInitialState = {
   user: null,
   isAuthChecked: false,
   isLoading: false,
@@ -62,7 +62,7 @@ export const checkUserAuth = createAsyncThunk(
 
 export const userSlice = createSlice({
   name: 'user',
-  initialState,
+  initialState: initialUserState,
   reducers: {
     setIsAuthChecked: (state, action: PayloadAction<boolean>) => {
       state.isAuthChecked = action.payload;
