@@ -61,4 +61,4 @@
 `npm run cypress:open` - запуск тестов.
 
 ### Ссылка на размещенное приложение
-[text](https://stellar-burger.online)
+[https://stellar-burger.online]
