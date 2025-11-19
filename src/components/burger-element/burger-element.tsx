@@ -1,9 +1,13 @@
 import {
+  delIngredient,
+  reorderIngredients,
+} from '@/services/constructor/burger-constructor-slice';
+import { useAppDispatch } from '@/services/store';
+import {
   ConstructorElement,
   DragIcon,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useDrag, useDrop } from 'react-dnd';
-import { useDispatch } from 'react-redux';
 
 import type { TIngredient } from '@/utils/types';
 
@@ -23,17 +27,14 @@ export const BurgerElement = ({ data }: TBurgerElementProps): React.JSX.Element 
     }),
   });
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [, dropTarget] = useDrop({
     accept: 'burgerElement',
     drop(item) {
       const dragItemId = (item as TIngredient).itemId;
       if (dragItemId !== data.itemId) {
-        dispatch({
-          type: 'constructorBuilder/reorderIngredients',
-          payload: { sourceId: dragItemId, targetId: data.itemId },
-        });
+        dispatch(reorderIngredients({ sourceId: dragItemId, targetId: data.itemId }));
       }
     },
   });
@@ -54,10 +55,7 @@ export const BurgerElement = ({ data }: TBurgerElementProps): React.JSX.Element 
         price={data.price}
         thumbnail={data.image}
         handleClose={() => {
-          dispatch({
-            type: 'constructorBuilder/delIngredient',
-            payload: { ...data },
-          });
+          dispatch(delIngredient({ ...data }));
         }}
       />
     </div>

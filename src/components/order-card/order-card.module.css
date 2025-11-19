@@ -1,0 +1,50 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  gap: 24px;
+  margin-right: 16px;
+  padding: 24px;
+  background-color: rgb(28 28 33 / 100%);
+  border-radius: 12px;
+}
+
+.timeNumberContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ingredientsContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.priceContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.imageContainer {
+  display: flex;
+  justify-content: left;
+}
+
+.ingredientImage {
+  width: 64px;
+  height: 64px;
+  margin: 0 0 0 -16px;
+  background-color: rgb(28 28 33 / 100%);
+  border: 2px solid white;
+  border-radius: 100%;
+}
+
+.ingredientImage:first-of-type {
+  margin: 0;
+}
+
+.link {
+  color: white;
+  text-decoration: none;
+}

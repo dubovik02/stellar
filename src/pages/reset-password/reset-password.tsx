@@ -1,6 +1,8 @@
 import { MessageDialog } from '@/components/message-dialog/message-dialog';
 import { Modal } from '@/components/modal/modal';
 import { Waiter } from '@/components/waiter/waiter';
+import { useAppDispatch, useAppSelector } from '@/services/store';
+import { setErrorText } from '@/services/user/user-slice';
 import { passwordResetReset } from '@/utils/api';
 import { RoutePath } from '@/utils/route-config';
 import {
@@ -9,10 +11,7 @@ import {
   PasswordInput,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useState, type ChangeEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
-import type { TStore } from '@/utils/types';
 
 import styles from '../forms-styles.module.css';
 
@@ -23,10 +22,10 @@ export const ResetPassword = (): React.JSX.Element => {
 
   useEffect(() => localStorage.setItem('canShowReset', 'false'), []);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const waiter = <Waiter />;
-  const { isLoading, error } = useSelector((store: TStore) => ({
+  const { isLoading, error } = useAppSelector((store) => ({
     isLoading: store.user.isLoading,
     error: store.user.error,
   }));
@@ -34,7 +33,7 @@ export const ResetPassword = (): React.JSX.Element => {
   const modal = (
     <Modal
       onCloseEvent={() => {
-        dispatch({ type: 'user/setErrorText', payload: '' });
+        dispatch(setErrorText(''));
       }}
     >
       <MessageDialog
@@ -58,16 +57,10 @@ export const ResetPassword = (): React.JSX.Element => {
                 void navigate(RoutePath.login);
               })
               .catch((err: Record<string, unknown>) => {
-                dispatch({
-                  type: 'user/setErrorText',
-                  payload: err.message ?? 'неизвестная ошибка',
-                });
+                dispatch(setErrorText((err.message as string) ?? 'неизвестная ошибка'));
               });
           } else {
-            dispatch({
-              type: 'user/setErrorText',
-              payload: res,
-            });
+            dispatch(setErrorText(res));
           }
         }}
       >

@@ -1,0 +1,68 @@
+.baseOrderContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 50vw;
+  margin: auto;
+  padding: 24px;
+  background-color: rgb(28 28 33 / 100%);
+  border-radius: 12px;
+}
+
+.orderNumber {
+  margin: 0 auto 40px !important;
+}
+
+.orderStatus {
+  margin-top: 12px !important;
+  margin-bottom: 60px !important;
+}
+
+.ingredientsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  height: 30vh;
+  margin-top: 24px;
+  margin-bottom: 40px;
+  padding: 8px 24px 0 8px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.elementContainer {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.datePriceContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.priceContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.totalPriceContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.ingredientImage {
+  width: 64px;
+  height: 64px;
+  margin: 0;
+  background-color: rgb(28 28 33 / 100%);
+  border: 2px solid white;
+  border-radius: 100%;
+}

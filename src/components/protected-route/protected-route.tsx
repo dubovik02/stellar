@@ -1,5 +1,5 @@
+import { useAppSelector } from '@/services/store';
 import { RoutePath } from '@/utils/route-config';
-import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import { selectIsAuthChecked, selectUser } from '../../services/user/user-slice';
@@ -14,8 +14,8 @@ export const Protected = ({
   onlyAuth = false,
   element: component,
 }: TProtectedProps): React.JSX.Element => {
-  const user = useSelector(selectUser);
-  const isAuthChecked = useSelector(selectIsAuthChecked);
+  const user = useAppSelector(selectUser);
+  const isAuthChecked = useAppSelector(selectIsAuthChecked);
   const location = useLocation();
 
   if (!isAuthChecked) {

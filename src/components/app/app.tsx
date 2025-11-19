@@ -1,4 +1,6 @@
 import { NotFoundErorPage } from '@/pages/error-page/error-page';
+import { FeedOrder } from '@/pages/feed-order/feed-order';
+import { Feed } from '@/pages/feed/feed';
 import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
 import { Home } from '@/pages/home/home';
 import { Login } from '@/pages/login/login';
@@ -7,20 +9,21 @@ import { Register } from '@/pages/register/register';
 import { ResetPassword } from '@/pages/reset-password/reset-password';
 import { loadIngredients } from '@/services/ingredients/burger-ingredients-slice';
 import { checkUserAuth } from '@/services/user/user-slice';
+import properties from '@/utils/properties';
 import { RoutePath } from '@/utils/route-config';
+import { CONNECT_MODE } from '@/utils/types';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
 
+import { useAppDispatch } from '../../services/store';
+import { BaseFeed } from '../base-feed/base-feed';
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
+import { OrderCardFull } from '../order-card-full/order-card-full';
 import { ProfileEditForm } from '../profile-edit-form/profile-edit-form';
-import { ProfileOrdersForm } from '../profile-orders-form/profile-orders-form';
 import { Protected } from '../protected-route/protected-route';
-
-import type { UnknownAction } from '@reduxjs/toolkit';
 
 import styles from './app.module.css';
 
@@ -35,9 +38,9 @@ export const App = (): React.JSX.Element => {
     void navigate(-1);
   };
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(loadIngredients() as unknown as UnknownAction);
+    void dispatch(loadIngredients());
   }, []);
 
   const windowModal = <IngredientDetails />;
@@ -48,8 +51,14 @@ export const App = (): React.JSX.Element => {
     </Modal>
   );
 
+  const orderModal = (
+    <Modal caption="" onCloseEvent={handleModalClose} isContainerSlim={true}>
+      <OrderCardFull />
+    </Modal>
+  );
+
   useEffect(() => {
-    dispatch(checkUserAuth() as unknown as UnknownAction);
+    void dispatch(checkUserAuth());
   }, []);
 
   return (
@@ -61,6 +70,33 @@ export const App = (): React.JSX.Element => {
             <Route path={RoutePath.home} element={<Home />} />
             <Route path={RoutePath.main} element={<Home />} />
             <Route path={RoutePath.ingredients} element={windowModal} />
+            <Route path={RoutePath.feed} element={<Feed />}>
+              <Route
+                path={RoutePath.feed}
+                element={
+                  <BaseFeed
+                    wssUrl={
+                      properties.websocket.baseUrl + properties.websocket.ordersAll
+                    }
+                    isStatisticDataWillShow={true}
+                    connectMode={CONNECT_MODE.FEED}
+                  />
+                }
+              />
+              <Route
+                path={RoutePath.feed_base}
+                element={
+                  <BaseFeed
+                    wssUrl={
+                      properties.websocket.baseUrl + properties.websocket.ordersAll
+                    }
+                    isStatisticDataWillShow={true}
+                    connectMode={CONNECT_MODE.FEED}
+                  />
+                }
+              />
+              <Route path={RoutePath.feed_order} element={<FeedOrder />} />
+            </Route>
             <Route path={RoutePath.not_found} element={<NotFoundErorPage />} />
             <Route
               path={RoutePath.reset_password}
@@ -68,7 +104,7 @@ export const App = (): React.JSX.Element => {
                 localStorage.getItem('canShowReset') === 'true' ? (
                   <ResetPassword />
                 ) : (
-                  <Home />
+                  <Navigate to={RoutePath.login} />
                 )
               }
             />
@@ -91,13 +127,29 @@ export const App = (): React.JSX.Element => {
             >
               <Route path={RoutePath.profile} element={<ProfileEditForm />} />
               <Route path={RoutePath.profile_profile} element={<ProfileEditForm />} />
-              <Route path={RoutePath.profile_orders} element={<ProfileOrdersForm />} />
+              <Route
+                path={RoutePath.profile_orders}
+                element={
+                  <BaseFeed
+                    wssUrl={
+                      properties.websocket.baseUrl +
+                      properties.websocket.usersOrders +
+                      `?token=${localStorage.getItem('accessToken')?.split(' ')[1]}`
+                    }
+                    isStatisticDataWillShow={false}
+                    connectMode={CONNECT_MODE.USER_FEED}
+                  />
+                }
+              />
             </Route>
+            <Route path={RoutePath.profile_orders_order} element={<OrderCardFull />} />
           </Routes>
 
           {background && (
             <Routes>
               <Route path="/ingredients/:ingredientId" element={directModal} />
+              <Route path="/feed/:feedId" element={orderModal} />
+              <Route path="/profile/orders/:orderId" element={orderModal} />
             </Routes>
           )}
         </main>

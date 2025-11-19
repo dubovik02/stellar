@@ -1,0 +1,54 @@
+.dataContainer {
+  display: flex;
+  gap: 60px;
+  margin: 24px 0;
+}
+
+.ordersContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 75vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  min-width: 50%;
+  height: 75vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.totalStatusContainer {
+  display: flex;
+  gap: 16px;
+}
+
+.statusContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 0 auto 0 0;
+}
+
+.totalContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.ordersNumbersContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  /* display: flex;
+  flex-direction: column; */
+  gap: 8px;
+}
+
+.accentText {
+  color: aqua;
+}

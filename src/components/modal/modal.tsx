@@ -29,10 +29,15 @@ export const Modal = (props: TModalProps): React.JSX.Element => {
 
   const rootElem = document.getElementById('modals');
 
+  const isContainerSlim = props.isContainerSlim ?? false;
+  const containerStyle = isContainerSlim
+    ? styles.containerSlim
+    : styles.modal__container;
+
   return ReactDOM.createPortal(
     <>
       <ModalOverlay onCloseEvent={props.onCloseEvent}>
-        <div className={`${styles.modal__container} p-10`} onClick={modalOnClick}>
+        <div className={`${containerStyle}`} onClick={modalOnClick}>
           <div className={styles.modal__header}>
             <h3 className="text text_type_main-large">{props.caption}</h3>
             <CloseIcon

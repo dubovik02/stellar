@@ -19,7 +19,20 @@ export type TModalProps = {
   onCloseEvent?: () => void;
   children?: React.ReactNode;
   data?: object;
+  isContainerSlim?: boolean;
 };
+
+export enum CONNECT_MODE {
+  FEED,
+  USER_FEED,
+}
+
+export type TBaseFeedProps = {
+  wssUrl: string;
+  isStatisticDataWillShow: boolean;
+  connectMode: CONNECT_MODE;
+};
+
 //order
 export type TOrder = {
   name: string;
@@ -29,9 +42,27 @@ export type TOrder = {
   success: boolean;
 };
 
+export type TOrderCard = {
+  number: number;
+  name: string;
+  ingredients: TIngredient[];
+  status: string;
+};
+
 export type TOrderData = {
   ingredients: string[];
 };
+
+export type TOrderFeed = {
+  ingredients: string[];
+  _id: string;
+  status: string;
+  name: string;
+  number: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 //user
 export type TUser = {
   name?: string;
@@ -60,6 +91,11 @@ export type TRefreshTokenResponse = {
   refreshToken: string;
 };
 
+export type TOrderInfoResponse = {
+  success: boolean;
+  orders: TOrderFeed[];
+};
+
 //slices
 export type TConstructorState = {
   bun: TIngredient | null;
@@ -85,10 +121,33 @@ export type TUserInitialState = {
   isLoading: boolean;
   error: string;
 };
-//store
-export type TStore = {
-  user: TUserInitialState;
-  constructorBuilder: TConstructorState;
-  ingredients: TInintialIngredientsState;
-  order: TOrderState;
+
+export type TFeedState = {
+  success: boolean;
+  orders: TOrderFeed[];
+  total: number;
+  totalToday: number;
+};
+
+export type TFeedInitialState = {
+  data: TFeedState;
+  isLoading: boolean;
+  error?: string;
+};
+
+export type TUserFeedState = {
+  success: boolean;
+  orders: TOrderFeed[];
+};
+
+export type TUserFeedInitialState = {
+  data: TUserFeedState;
+  isLoading: boolean;
+  error?: string;
+};
+
+export type TDetailOrderInitialState = {
+  orders: TOrderFeed[];
+  isLoading: boolean;
+  error: string;
 };

@@ -13,8 +13,8 @@ export const constructorSlice = createSlice({
   name: 'constructorBuilder',
   initialState: initialState,
   reducers: {
-    addBun: (state, action) => {
-      state.bun = action.payload as TIngredient;
+    addBun: (state, action: PayloadAction<TIngredient>) => {
+      state.bun = action.payload;
     },
     addIngredient: (state, action: PayloadAction<TIngredient>) => {
       state.mainAndSauce = [...state.mainAndSauce, action.payload];
@@ -23,6 +23,10 @@ export const constructorSlice = createSlice({
       state.mainAndSauce = [...state.mainAndSauce].filter((item) => {
         return item.itemId !== action.payload.itemId;
       });
+    },
+    clearAll: (state) => {
+      state.bun = null;
+      state.mainAndSauce = [];
     },
     reorderIngredients: (state, action) => {
       const sourceId = (action.payload as Record<string, unknown>).sourceId ?? 'emptyId';
@@ -53,3 +57,6 @@ export const constructorSlice = createSlice({
     },
   },
 });
+
+export const { addBun, addIngredient, delIngredient, reorderIngredients, clearAll } =
+  constructorSlice.actions;
