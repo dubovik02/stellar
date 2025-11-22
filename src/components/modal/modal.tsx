@@ -37,7 +37,11 @@ export const Modal = (props: TModalProps): React.JSX.Element => {
   return ReactDOM.createPortal(
     <>
       <ModalOverlay onCloseEvent={props.onCloseEvent}>
-        <div className={`${containerStyle}`} onClick={modalOnClick}>
+        <div
+          className={`${containerStyle}`}
+          onClick={modalOnClick}
+          data-card-test={'modal'}
+        >
           <div className={styles.modal__header}>
             <h3 className="text text_type_main-large">{props.caption}</h3>
             <CloseIcon

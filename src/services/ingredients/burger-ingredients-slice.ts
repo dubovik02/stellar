@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import type { TInintialIngredientsState } from '@/utils/types';
 
-const initialState: TInintialIngredientsState = {
+export const initialIngredientsState: TInintialIngredientsState = {
   data: [],
   isLoading: false,
 };
@@ -21,7 +21,7 @@ export const loadIngredients = createAsyncThunk(
 
 export const ingredientsSlice = createSlice({
   name: 'ingredients',
-  initialState: initialState,
+  initialState: initialIngredientsState,
   reducers: {},
   extraReducers: (builder) => {
     builder

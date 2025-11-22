@@ -4,7 +4,11 @@ import styles from './modal-overlay.module.css';
 
 export const ModalOverlay = (props: TModalProps): React.JSX.Element => {
   return (
-    <div className={styles.modalOverlay__container} onClick={props.onCloseEvent}>
+    <div
+      className={styles.modalOverlay__container}
+      onClick={props.onCloseEvent}
+      data-card-test={'overlay'}
+    >
       {props.children}
     </div>
   );

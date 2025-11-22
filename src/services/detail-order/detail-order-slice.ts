@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import type { TDetailOrderInitialState } from '@/utils/types';
 
-const initialState: TDetailOrderInitialState = {
+export const initialDetailOrderState: TDetailOrderInitialState = {
   orders: [],
   isLoading: false,
   error: '',
@@ -19,7 +19,7 @@ export const loadDetailOrder = createAsyncThunk(
 
 export const detailOrderSlice = createSlice({
   name: 'detailOrder',
-  initialState: initialState,
+  initialState: initialDetailOrderState,
   reducers: {},
   extraReducers: (builder) => {
     builder

@@ -43,7 +43,7 @@ export const BurgerComponent = (props: TIngredient): React.JSX.Element => {
       className={styles.link}
       ref={dragRef as unknown as Ref<HTMLAnchorElement>}
     >
-      <div className={styles.card}>
+      <div className={styles.card} data-card-test={`${props.type}`}>
         {countOfUse > 0 && counter}
         <img src={props.image} alt={props.name}></img>
         <div className={`${styles.priceContainer} m-1`}>

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { TConstructorState, TIngredient } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: TConstructorState = {
+export const constructorInitialState: TConstructorState = {
   bun: null,
   mainAndSauce: [],
   isLoading: false,
@@ -11,7 +11,7 @@ const initialState: TConstructorState = {
 
 export const constructorSlice = createSlice({
   name: 'constructorBuilder',
-  initialState: initialState,
+  initialState: constructorInitialState,
   reducers: {
     addBun: (state, action: PayloadAction<TIngredient>) => {
       state.bun = action.payload;
